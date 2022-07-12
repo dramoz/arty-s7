@@ -14,7 +14,7 @@
 
 `default_nettype none
 
-module top(
+module arty_s7_test(
   input  wire        rst,  // reset, active low (top right, red button)
   input  wire        clk,  // 12 MHz, ~83.33ns
   
@@ -106,6 +106,6 @@ bled_pwm_inst
 assign led0_b = (btn[2]==1'b1) ? (bled_pwm) : (1'b0);
 assign led1_b = (btn[3]==1'b1) ? (bled_pwm) : (1'b0);
 
-endmodule: top
+endmodule: arty_s7_test
 
 `default_nettype wire

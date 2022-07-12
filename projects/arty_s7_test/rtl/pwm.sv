@@ -25,7 +25,7 @@ module pwm
   output logic          o_pwm
 );
 
-localparam logic [WL-1:0] PWM_MAX_CNT = int'(CLK_FREQ/PWM_FREQ);
+localparam PWM_MAX_CNT = int'(CLK_FREQ/PWM_FREQ);
 logic [WL-1:0] pwm_cnt = '0;
 
 always_ff @( posedge clk ) begin : pwm_cnt_proc
@@ -33,7 +33,7 @@ always_ff @( posedge clk ) begin : pwm_cnt_proc
     pwm_cnt  <= '0;
   end else begin
     
-    if(pwm_cnt < PWM_MAX_CNT) begin
+    if(pwm_cnt < PWM_MAX_CNT[WL-1:0]) begin
         pwm_cnt <= pwm_cnt + 1;
     end else begin
         pwm_cnt <= '0;
