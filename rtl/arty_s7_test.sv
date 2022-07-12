@@ -32,11 +32,11 @@ module top(
 
 localparam CLK_FREQ = 12000000;
 localparam RLED_PWM_FREQ = 5000;
-localparam RLED_PWM_DCYCLE = $ceil(0.25*RLED_PWM_FREQ);
+localparam RLED_PWM_DCYCLE = int'(0.25*RLED_PWM_FREQ);
 localparam GLED_PWM_FREQ = 10000;
-localparam GLED_PWM_DCYCLE = $ceil(0.5*GLED_PWM_FREQ);
+localparam GLED_PWM_DCYCLE = int'(0.50*GLED_PWM_FREQ);
 localparam BLED_PWM_FREQ = 20000;
-localparam BLED_PWM_DCYCLE = $ceil(0.75*BLED_PWM_FREQ);
+localparam BLED_PWM_DCYCLE = int'(0.75*BLED_PWM_FREQ);
 
 logic [23:0] rled_cnt = '0;  // 1s -> 12e6 -> log2(): 24bits
 
@@ -88,8 +88,8 @@ gled_pwm_inst
   .i_duty_cycle(GLED_PWM_DCYCLE),
   .o_pwm(gled_pwm)
 );
-assign led0_g = (btn[0]==1'b1) ? ( gled_pwm) : (1'b0);
-assign led1_g = (btn[1]==1'b1) ? (~gled_pwm) : (1'b0);
+assign led0_g = (btn[0]==1'b1) ? (gled_pwm) : (1'b0);
+assign led1_g = (btn[1]==1'b1) ? (gled_pwm) : (1'b0);
 
 pwm
 #(
@@ -103,8 +103,8 @@ bled_pwm_inst
   .i_duty_cycle(BLED_PWM_DCYCLE),
   .o_pwm(bled_pwm)
 );
-assign led0_b = (btn[2]==1'b1) ? ( bled_pwm) : (1'b0);
-assign led1_b = (btn[3]==1'b1) ? (~bled_pwm) : (1'b0);
+assign led0_b = (btn[2]==1'b1) ? (bled_pwm) : (1'b0);
+assign led1_b = (btn[3]==1'b1) ? (bled_pwm) : (1'b0);
 
 endmodule: top
 
