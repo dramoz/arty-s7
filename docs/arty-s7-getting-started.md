@@ -1,11 +1,9 @@
 ---
 title: Arty-S7 Getting Started
-image: https://digilent.com/reference/_media/reference/programmable-logic/arty-s7/arty-s7-0.png
+icon: https://digilent.com/reference/_media/reference/programmable-logic/arty-s7/arty-s7-0.png
 ---
 
 #  Arty-S7 - Getting Started
-Xilinx Arty-S7 Projects and Tutorials
-
 # References
 
 [Arty S7: Spartan-7 FPGA Development Board](https://digilent.com/shop/arty-s7-spartan-7-fpga-development-board/)
