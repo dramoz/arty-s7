@@ -24,26 +24,25 @@ module pwm
   input  wire  [WL-1:0] i_duty_cycle,
   output logic          o_pwm
 );
-
-localparam PWM_MAX_CNT = int'(CLK_FREQ/PWM_FREQ);
-logic [WL-1:0] pwm_cnt = '0;
-
-always_ff @( posedge clk ) begin : pwm_cnt_proc
-  if (!rst) begin
-    pwm_cnt  <= '0;
-  end else begin
-    
-    if(pwm_cnt < PWM_MAX_CNT[WL-1:0]) begin
-        pwm_cnt <= pwm_cnt + 1;
-    end else begin
-        pwm_cnt <= '0;
-    end
-  end  // rst
   
-end // pwm_cnt_proc
-
-assign o_pwm = (pwm_cnt < i_duty_cycle) ? (1'b0) : (1'b1);
-
+  localparam PWM_MAX_CNT = int'(CLK_FREQ/PWM_FREQ);
+  logic [WL-1:0] pwm_cnt = '0;
+  
+  always_ff @( posedge clk ) begin : pwm_cnt_proc
+    if (!rst) begin
+      pwm_cnt <= '0;
+      o_pwm   <= 1'b0;
+    end else begin
+      
+      if(pwm_cnt < PWM_MAX_CNT[WL-1:0]) begin
+          pwm_cnt <= pwm_cnt + 1;
+      end else begin
+          pwm_cnt <= '0;
+      end
+      o_pwm <= (pwm_cnt > i_duty_cycle) ? (1'b0) : (1'b1);
+    end  // rst
+  end // pwm_cnt_proc
+  
 endmodule: pwm
 
 `default_nettype wire

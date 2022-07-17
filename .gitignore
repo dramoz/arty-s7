@@ -30,3 +30,21 @@
 *.exe
 *.out
 *.app
+
+# Local example
+assets/OoB-Demo-2017.2.1-1
+
+# Vivado
+design_ila/
+
+# Python
+__pycache__/
+
+# Verilator
+sim_build/
+*.fst
+*.vcd
+results.xml
+
+# Logs capture
+typescript

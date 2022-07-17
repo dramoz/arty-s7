@@ -1,0 +1,40 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Thu Jul 14 14:06:10 2022
+[*]
+[dumpfile] "/home/dramoz/dev/arty-s7/projects/arty_s7_test/tb/dump.fst"
+[dumpfile_mtime] "Thu Jul 14 11:47:40 2022"
+[dumpfile_size] 5435831
+[savefile] "/home/dramoz/dev/arty-s7/projects/arty_s7_test/tb/arty_s7_test.gtkw"
+[timestart] 177000000
+[size] 2560 1370
+[pos] -1 -1
+*-30.271757 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] arty_s7_test.
+[sst_width] 233
+[signals_width] 275
+[sst_expanded] 1
+[sst_vpaned_height] 410
+@28
+rst
+clk
+@22
+btn[3:0]
+@28
+led0_b
+led0_g
+led0_r
+led1_b
+led1_g
+led1_r
+@22
+led[3:0]
+sw[3:0]
+@200
+---------------------
+@28
+arty_s7_test.bled_pwm_inst.o_pwm
+arty_s7_test.gled_pwm_inst.o_pwm
+arty_s7_test.rled_pwm_inst.o_pwm
+[pattern_trace] 1
+[pattern_trace] 0
