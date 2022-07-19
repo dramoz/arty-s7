@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../vexriscv_generator"
 		}
 	],
 	"settings": {}
