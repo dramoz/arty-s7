@@ -30,7 +30,7 @@ async def reset(dut):
   dut.rst.value = 1
 
 @cocotb.test()
-async def free_run_arty_s7_test(dut, times=100, duration=1, units='ms'):
+async def free_run_arty_s7_atrover(dut, times=100, duration=1, units='ms'):
   """Just let it run a few microseconds"""
   
   clk_period = int(1e9/CLK_FREQ)

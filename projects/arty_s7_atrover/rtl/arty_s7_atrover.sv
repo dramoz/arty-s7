@@ -19,8 +19,8 @@ module arty_s7_atrover #(
   parameter RISCV_TEXT      = "../vexriscv_generator/VexRiscvBase/build/main.hex"
 )
 (
-  input               reset,
-  input               clk,
+  input wire resetn,
+  input wire clk,
   
   // IO
   input  wire  [3:0] sw,  // Switches
@@ -49,7 +49,7 @@ module arty_s7_atrover #(
   // reset system or boot
   btn_debouncer #(
     .CLK_FREQUENCY(CLK_FREQ),
-    .BUTTON_INPUT_LEVEL(1),
+    .BUTTON_INPUT_LEVEL(0),
     .CLICK_OUTPUT_LEVEL(1),
     .CLICK_DEBOUNCE_MS(CLICK_DEBOUNCE_MS),
     .LONG_PRESS_OUTPUT_LEVEL(1),
@@ -58,7 +58,7 @@ module arty_s7_atrover #(
   reset_btn_debouncer_inst(
     .reset(1'b0),
     .clk(clk),
-    .usr_btn(reset),
+    .usr_btn(resetn),
     .click(sys_reset),
     .long_press(boot_reset)
   );
