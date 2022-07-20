@@ -166,17 +166,25 @@ Selecting the template:
 
 ### Resource utilization
 
-<details>
-  <summary>Vivado Utilization Report</summary>
-  <embed type="text/html" src="assets/base_arch_utilization.txt" width="500" height="200">
-</details>
+The full implementation of the base architecture used:
+
+| Block           | LUTs (32600) | Registers (65200) | Block RAM (75) | DSPs (120) |
+| --------------- | ------------ | ----------------- | -------------- | ---------- |
+| arty_s7_atrover | 1824 (5.60%) | 1749 (2.68%)      | 9 (12.00%)     | 4 (3.33%)  |
+| VexRiscv-RAM    | -            | -                 | 8 (10.67%)     | -          |
+| VexRiscv        | 1720 (5.28%) | 1056 (1.62%)      | 1 (1.33%)      | 4 (3.33%)  |
+
+A full utilization report can be found in [Base Architecture Utilization Report](assets/base_arch_utilization.txt)
 
 <p align = "center">
+  <img src="assets/base_arch_impl_tbl.png" style="zoom:100%;" title="Vivado Language Templates" />
+  <img src="assets/base_arch_impl_tbl_p.png" style="zoom:100%;" title="Vivado Language Templates" />
   <img src="assets/base_arch_impl_rpt.png" alt="base architecture implementation report" style="zoom:100%;" title="Vivado Language Templates" />
 </p>
 <p align = "center">
 <i>Base Architecture Implementation Report (Vivado)</i>
 </p>
+
 
 ## Future work
 
