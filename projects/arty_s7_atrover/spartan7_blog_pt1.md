@@ -1,19 +1,29 @@
 
 
-# <img src="https://digilent.com/reference/_media/reference/programmable-logic/arty-s7/arty-s7-0.png" alt="img" style="height:2em;" /> Arty-S7/50 - ArTy-ROVER
+# 🚎 Arty-S7-Rover (base architecture)
+
+### Disclaimer
 
 > ==**Build a project** with the Arty S7==, [7 Ways to Leave Your Spartan-6 FPGA](https://community.element14.com/technologies/fpga-group/w/documents/27537/7-ways-to-leave-your-spartan-6-fpga) [<img src="https://community.element14.com/e14/cfs/e14core/images/logos/e14_Profile_206px.png" alt="element14 Community" style="height:2em;" />](https://community.element14.com/) challenge.
 
-The ArTy-ROVER is a small functional autonomous vehicle based on the [Digilent Arty S7-50 board](https://digilent.com/reference/programmable-logic/arty-s7/start). The project was done for the [7 Ways to Leave Your Spartan-6 FPGA](https://community.element14.com/technologies/fpga-group/w/documents/27537/7-ways-to-leave-your-spartan-6-fpga) [<img src="https://community.element14.com/e14/cfs/e14core/images/logos/e14_Profile_206px.png" alt="element14 Community" style="height:2em;" />](https://community.element14.com/) challenge.
+The Arty-S7-Rover is a small functional autonomous vehicle based on the [Digilent Arty S7-50 board](https://digilent.com/reference/programmable-logic/arty-s7/start). The project was done for the [7 Ways to Leave Your Spartan-6 FPGA](https://community.element14.com/technologies/fpga-group/w/documents/27537/7-ways-to-leave-your-spartan-6-fpga) [<img src="https://community.element14.com/e14/cfs/e14core/images/logos/e14_Profile_206px.png" alt="element14 Community" style="height:2em;" />](https://community.element14.com/) challenge.
 
 All the files are open-source, MIT license and can be downloaded from [<img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" alt="GitHub Logo" style="height:1em;" />-<img src="https://avatars.githubusercontent.com/u/34524370?v=4" alt="img" style="height:1em;" />dramoz](https://github.com/dramoz/arty-s7)
 
+### Base Architecture
+
+This first blog of three goes through the initial requirements (e.g. tools, build process) of the Arty-S7-Rover project.
+
+The base architecture implements the RISC-V core, the required memory banks, a UART IP for serial port communications, PWM IP blocks, and a simple firmware to test the setup by controlling the LEDs with user input from the buttons and dipswitch.
+
 ## Description
 
-The ArTy-ROVER is a self-autonomous vehicle that uses a [Xilinx Spartan-7 FPGA](https://www.xilinx.com/products/silicon-devices/fpga/spartan-7.html) as its main processor. Inside the FPGA a [RISC-V](https://en.wikipedia.org/wiki/RISC-V) microprocessor was instantiated plus other IP blocks to control the vehicle. Without too many details, the ArTy-ROVER consists of three different main blocks:
+The Arty-S7-Rover is a self-autonomous vehicle that uses a [Xilinx Spartan-7 FPGA](https://www.xilinx.com/products/silicon-devices/fpga/spartan-7.html) as its main processor. Inside the FPGA a [RISC-V](https://en.wikipedia.org/wiki/RISC-V) microprocessor was instantiated plus other IP blocks to control the vehicle. Without too many details, the Arty-S7-Rover consists of three different main blocks:
 
 - Hardware
   - Arty S7-50 development board
+    - RISC-V 32bits processor core + instruction/data memory
+    - IPs for IO control
   - 3D printed chassis
   - Sensors & Actuators
     - 2xDC motors
@@ -114,9 +124,9 @@ The VexRiscv is a plugin-based HDL RISC-V core. For this project, a simple archi
 
 > 👉The custom Scala code is just to split the generated Verilog RTL in a wrapper and an implemented design, as I prefer to have a top wrapper to hide the one-file has it all VexRiscv style.
 
-#### IP
+#### Block Diagram
 
-The generated core has the following IO ports:
+The generated RIRSC-V core has the following IO ports:
 
 <p align = "center">
   <img src="docs/doc_internal/VexRiscvBase.svg" alt="VexRiscvBase" style="zoom:100%;" title="Arty-S7 VexRiscv core block diagram" />
@@ -125,7 +135,21 @@ The generated core has the following IO ports:
 <i>Arty-S7 VexRiscv core block diagram</i>
 </p>
 
-As the generated processor core does not have any memory instantiation, the instruction/data memory is created as a true dual-port RAM using Vivado.
+### Core RAM
+
+As the generated processor core does not have any memory instantiation, the instruction/data memory is created as a true dual-port RAM using Vivado. The RAM is implemented with the following parameters, as required by the VexRiscv architecture:
+
+- True dual port, read first w/ Byte-write
+- 8192 Bytes
+  - 4096 instruction memory
+  - 4096 data memory
+- Low latency (e.g. not registered outputs): VexRiscv requires that memory access has only one clock latency.
+
+Selecting the template:
+
+- ` Project Manager ˃ Language Templates  `
+  -  `Verilog ˃ Synthesis Constructs ˃ Coding Examples ˃ RAM ˃ BlockRAM ˃ True Dual Port`
+    - `True Dual Port ˃ 1 Clock  ˃ Write First Mode w/ Byte-write` 
 
 <p align = "center">
   <img src="assets/vivado-language-templates.png" alt="vivado-language-templates" style="zoom:100%;" title="Vivado Language Templates" />
@@ -136,9 +160,17 @@ As the generated processor core does not have any memory instantiation, the inst
 
 > ⚠ Instruction and data memory share the same memory block, where instruction access is read-only while data access is read/write (which would be useful if JTAG debug is implemented)
 
-#### Resource utilization
+### IO Peripherals
+
+#### IO Registers bank
 
 
+
+### Resource utilization
+
+
+
+## Future work
 
 ## References
 

@@ -1,0 +1,23 @@
+`ifndef __CPU_LAYOUT__
+`define __CPU_LAYOUT__
+
+`define CPU_NAME "VexRiscvBase"
+`define CPU_ID "vexriscv"
+`define MARCH "rv32im"
+`define MABI "ilp32"
+`define START_ADDRESS 0x00000000
+`define END_LOOP_ADDRESS 0x00000010
+`define TRAP_ADDRESS 0x00000020
+`define STACK_SIZE 512
+`define MEM_CODE_START 0x00000000
+`define MEM_CODE_END 0x00001000
+`define MEM_CODE_SIZE 4096
+`define MEM_DATA_START 0x00001000
+`define MEM_DATA_END 0x00002000
+`define MEM_DATA_SIZE 4096
+`define MEM_IO_START 0xf0000000
+`define MEM_IO_END 0xf0000080
+`define MEM_IO_SIZE 128
+
+`endif
+
