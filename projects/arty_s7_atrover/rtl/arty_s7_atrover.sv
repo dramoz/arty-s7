@@ -184,7 +184,8 @@ module arty_s7_atrover #(
   
   // --------------------------------------------------
   // RGB LEDs PWM (to lower intensity)
-  localparam RGB_PWM_FREQ = 20000;
+  localparam RGB_PWM_FREQ  = 20000;
+  localparam PWM_DCYCLE_WL = $clog2(CLK_FREQ/RGB_PWM_FREQ);
   logic [RISCV_WL-1:0] rgb0_dcycle;
   logic                rgb0_pwm;
   pwm
@@ -196,7 +197,7 @@ module arty_s7_atrover #(
   (
     .clk(clk),
     .reset(sys_reset),
-    .i_duty_cycle(rgb0_dcycle),
+    .i_duty_cycle(rgb0_dcycle[PWM_DCYCLE_WL-1:0]),
     .o_pwm(rgb0_pwm)
   );
   
@@ -211,7 +212,7 @@ module arty_s7_atrover #(
   (
     .clk(clk),
     .reset(sys_reset),
-    .i_duty_cycle(rgb1_dcycle),
+    .i_duty_cycle(rgb1_dcycle[PWM_DCYCLE_WL-1:0]),
     .o_pwm(rgb1_pwm)
   );
   // --------------------------------------------------
@@ -272,10 +273,10 @@ module arty_s7_atrover #(
   // RGBs
   always_comb begin: rgb_comb
     rgb0_dcycle = io_regs[RGB0_DCYCLE_REG];
-    rgb0        = io_regs[RGB0_REG][2:0] & rgb0_pwm;
+    rgb0        = io_regs[RGB0_REG][2:0] & { 3{rgb0_pwm} };
     
     rgb1_dcycle = io_regs[RGB1_DCYCLE_REG];
-    rgb1        = io_regs[RGB1_REG][2:0] & rgb0_pwm;
+    rgb1        = io_regs[RGB1_REG][2:0] & { 3{rgb1_pwm} };
   end: rgb_comb
   
   always_comb dBus_rsp_data = (io_slct) ? (io_rdata) : (mem_rdata);
