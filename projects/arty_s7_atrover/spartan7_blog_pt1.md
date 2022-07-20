@@ -127,9 +127,12 @@ The generated core has the following IO ports:
 
 As the generated processor core does not have any memory instantiation, the instruction/data memory is created as a true dual-port RAM using Vivado.
 
-| <img src="assets/vivado-language-templates.png" alt="vivado-language-templates" style="zoom:100%;" /> |
-| :----------------------------------------------------------: |
-|                 *Vivado Language Templates*                  |
+<p align = "center">
+  <img src="assets/vivado-language-templates.png" alt="vivado-language-templates" style="zoom:100%;" title="Vivado Language Templates" />
+</p>
+<p align = "center">
+<i>Vivado Language Templates</i>
+</p>
 
 
 
