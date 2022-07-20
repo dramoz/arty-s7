@@ -18,8 +18,8 @@ module pwm
   parameter WL = $clog2(CLK_FREQ/PWM_FREQ)
 )
 (
-  input  wire           rst,  // reset, active low (top right, red button)
-  input  wire           clk,  // 12 MHz, ~83.33ns
+  input  wire           reset,
+  input  wire           clk,
   
   input  wire  [WL-1:0] i_duty_cycle,
   output logic          o_pwm
@@ -29,7 +29,7 @@ module pwm
   logic [WL-1:0] pwm_cnt = '0;
   
   always_ff @( posedge clk ) begin : pwm_cnt_proc
-    if (!rst) begin
+    if (reset) begin
       pwm_cnt <= '0;
       o_pwm   <= 1'b0;
     end else begin

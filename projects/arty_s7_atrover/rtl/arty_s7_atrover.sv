@@ -10,7 +10,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 `default_nettype none
-`include "cpu_layout.v"
+//`include "cpu_layout.v"
 
 module arty_s7_atrover #(
   parameter CLK_FREQ        = 100000000,
@@ -32,15 +32,19 @@ module arty_s7_atrover #(
   // Peripherals
   input  wire  uart_rx,
   output logic uart_tx
-)
+);
+  // ------------------------------------------------------------
+  localparam RISCV_WL_BYTES = RISCV_WL/8;
+  localparam RISCV_PLS_WL = $clog2(RISCV_WL_BYTES-1);  // VexRiscv dBus_cmd_payload_size (byte mem access)
+  
   // ------------------------------------------------------------
   // Button debouncing parameters
   localparam CLICK_DEBOUNCE_MS = 10;
   localparam LONG_PRESS_DURATION_MS = 1000;
   // ------------------------------------------------------------
   // System reset
-  logic sys_rst;
-  logic boot_rst;
+  logic sys_reset;
+  logic boot_reset;
   
   // reset system or boot
   btn_debouncer #(
@@ -55,42 +59,45 @@ module arty_s7_atrover #(
     .reset(1'b0),
     .clk(clk),
     .usr_btn(reset),
-    .click(sys_rst),
-    .long_press(boot_rst)
+    .click(sys_reset),
+    .long_press(boot_reset)
   );
   // --------------------------------------------------
-  localparam RISCV_RAM_ADDR_WL = $clog2(RAM_DEPTH-1);
+  localparam RISCV_RAM_ADDR_WL = $clog2(RISCV_RAM_DEPTH-1);
   
   // ------------------------------------------------------------
   // VexRiscv IO ports signals
-  logic               iBus_cmd_valid;
-  logic               iBus_cmd_ready;
+  logic                iBus_cmd_valid;
+  logic                iBus_cmd_ready;
   logic [RISCV_WL-1:0] iBus_cmd_payload_pc;
-  logic               iBus_rsp_valid;
-  logic               iBus_rsp_payload_error;
+  logic                iBus_rsp_valid;
+  logic                iBus_rsp_payload_error;
   logic [RISCV_WL-1:0] iBus_rsp_payload_inst;
-  logic               dBus_cmd_valid;
-  logic               dBus_cmd_ready;
-  logic               dBus_cmd_payload_wr;
-  logic [RISCV_WL-1:0] dBus_cmd_payload_address;
-  logic [RISCV_WL-1:0] dBus_cmd_payload_data;
-  logic [1:0]         dBus_cmd_payload_size; // TODO: check, this could change if RISCV-64
-  logic               dBus_rsp_ready;
-  logic               dBus_rsp_error;
+  
+  logic                    dBus_cmd_valid;
+  logic                    dBus_cmd_ready;
+  logic                    dBus_cmd_payload_wr;
+  logic [RISCV_WL-1:0]     dBus_cmd_payload_address;
+  logic [RISCV_WL-1:0]     dBus_cmd_payload_data;
+  logic [RISCV_PLS_WL-1:0] dBus_cmd_payload_size;
+  
+  logic                dBus_rsp_ready;
+  logic                dBus_rsp_error;
   logic [RISCV_WL-1:0] dBus_rsp_data;
-  logic               timerInterrupt;
-  logic               externalInterrupt;
-  logic               softwareInterrupt;
+  
+  logic                timerInterrupt;
+  logic                externalInterrupt;
+  logic                softwareInterrupt;
   
   // --------------------------------------------------
   // VexRiscv Memory/Pheriperals access logic
   assign iBus_cmd_ready = 1'b1;
   assign dBus_cmd_ready = 1'b1;
-  always_ff(@posedge clk) begin
+  always_ff @( posedge clk ) begin
     iBus_rsp_valid <= iBus_cmd_valid;
     iBus_rsp_payload_error <= (iBus_cmd_payload_pc[RISCV_WL-1:RISCV_RAM_ADDR_WL] != '0);
     
-    dBus_rsp_valid <= dBus_cmd_valid;
+    dBus_rsp_ready <= dBus_cmd_valid && !dBus_cmd_payload_wr;
     dBus_rsp_error <= (dBus_cmd_payload_address[RISCV_WL-1-1:RISCV_RAM_ADDR_WL] != 0);
   end
   
@@ -102,9 +109,12 @@ module arty_s7_atrover #(
   // ----------------------------------------
   // Translate byte address to double-word address
   // Write select
-  logic byte_slct;
-  logic [3:0] dbus_we;
-  logic [RISCV_RAM_ADDR_WL-1: 0] dbus_addr;
+  logic [RISCV_RAM_ADDR_WL-1:0] ibus_addr;
+  always_comb ibus_addr = iBus_cmd_payload_pc[RISCV_RAM_ADDR_WL+1:2];
+  
+  logic [RISCV_WL_BYTES-1:0]    byte_slct;
+  logic [RISCV_WL_BYTES-1:0]    dbus_we;
+  logic [RISCV_RAM_ADDR_WL-1:0] dbus_addr;
   
   // Read capture
   logic [RISCV_WL-1:0] mem_rdata;
@@ -121,11 +131,12 @@ module arty_s7_atrover #(
     if(io_slct) begin
       dbus_we = '0;
     end else begin
-      dbus_we = { 4{dBus_cmd_valid && dBus_cmd_payload_wr} & byte_slct};
+      dbus_we = { 4{dBus_cmd_valid && dBus_cmd_payload_wr} } & byte_slct;
     end
   end: dbus_wr_slct
   
   vexriscv_ram #(
+    .NB_COL(RISCV_WL_BYTES),
     .RAM_DEPTH(RISCV_RAM_DEPTH),
     .INIT_FILE(RISCV_TEXT)
   )
@@ -133,8 +144,8 @@ module arty_s7_atrover #(
   (
     .clk(clk),
     .ibus_en(1'b1),
-    .ibus_we(1'b0),
-    .ibus_addr(iBus_cmd_payload_pc),
+    .ibus_we('0),
+    .ibus_addr(ibus_addr),
     .ibus_din('0),
     .ibus_dout(iBus_rsp_payload_inst),
     .dbus_en(1'b1),
@@ -162,7 +173,7 @@ module arty_s7_atrover #(
         .LONG_PRESS_DURATION_MS(LONG_PRESS_DURATION_MS)
       )
       reset_btn_debouncer_inst(
-        .reset(sys_rst)
+        .reset(sys_reset),
         .clk(clk),
         .usr_btn(btn[i]),
         .click(btn_dbncd[i]),
@@ -184,7 +195,7 @@ module arty_s7_atrover #(
   rgb0_pwm_inst
   (
     .clk(clk),
-    .rst(rst),
+    .reset(sys_reset),
     .i_duty_cycle(rgb0_dcycle),
     .o_pwm(rgb0_pwm)
   );
@@ -199,13 +210,13 @@ module arty_s7_atrover #(
   rgb1_pwm_inst
   (
     .clk(clk),
-    .rst(rst),
+    .reset(sys_reset),
     .i_duty_cycle(rgb1_dcycle),
     .o_pwm(rgb1_pwm)
   );
   // --------------------------------------------------
   // IO/Peripherals access
-  typdef bit [IO_SPACE_ADDR_WL-1:0] enum  {
+  typedef enum  {
     DEBUG_REG            = 0,
     UART0_TX_REG         = 1,
     UART0_RX_REG         = 2,
@@ -228,21 +239,19 @@ module arty_s7_atrover #(
   logic [RISCV_WL-1:0] io_regs[IO_REG_SPACE];
   
   always_comb begin
+    io_wen   = dBus_cmd_payload_wr;
     io_addr  = dBus_cmd_payload_address[IO_SPACE_ADDR_WL+1:2];
     io_wdata = dBus_cmd_payload_data;
-    io_wen   = dBus_cmd_payload_wr;
-    io_rdata = io_regs[io_addr];
+    io_rdata = (io_wen) ? (io_wdata) : (io_regs[io_addr]);
   end
   
   always_ff @( posedge clk ) begin
-    if(sys_rst) begin
-      integer reg_inx;
-      for(reg_inx = 0; reg_inx < IO_REG_SPACE; reg_inx = reg_inx + 1)
-        io_regs[reg_inx] <= '0;
+    if(sys_reset) begin
+      io_regs <= '{default:0};
       
     end else begin
       if(dBus_cmd_valid && io_slct) begin
-        if(io_wr) begin
+        if(io_wen) begin
           io_regs[io_addr] <= io_wdata;
           
         end else begin: io_regs_vl_read_update
@@ -250,18 +259,23 @@ module arty_s7_atrover #(
           io_regs[BUTTONS_REG]  <= {28'd0, btn_dbncd};
           io_regs[SWITCHES_REG] <= {28'd0, sw};
           
-        end: io_regs_peripherals_update
+        end
       end
     end
   end
   
   // LEDs
-  
+  always_comb begin: leds_comb
+    leds = io_regs[LEDS_REG][3:0];
+  end: leds_comb
   
   // RGBs
   always_comb begin: rgb_comb
     rgb0_dcycle = io_regs[RGB0_DCYCLE_REG];
+    rgb0        = io_regs[RGB0_REG][2:0] & rgb0_pwm;
+    
     rgb1_dcycle = io_regs[RGB1_DCYCLE_REG];
+    rgb1        = io_regs[RGB1_REG][2:0] & rgb0_pwm;
   end: rgb_comb
   
   always_comb dBus_rsp_data = (io_slct) ? (io_rdata) : (mem_rdata);
@@ -274,7 +288,7 @@ module arty_s7_atrover #(
   // --------------------------------------------------
   VexRiscvBase VexRiscvBase_inst (
     .clk                      (clk),
-    .reset                    (boot_rst),
+    .reset                    (boot_reset),
     .iBus_cmd_valid           (iBus_cmd_valid),
     .iBus_cmd_ready           (iBus_cmd_ready),
     .iBus_cmd_payload_pc      (iBus_cmd_payload_pc),

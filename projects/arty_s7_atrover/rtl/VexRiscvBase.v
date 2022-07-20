@@ -2,7 +2,7 @@
 // Component : VexRiscvBase
 // Git hash  : 6a47e6f0138506ee9046db18206b3784d1ea203b
 
-`timescale 1ns/1ps
+//`timescale 1ns/1ps
 
 module VexRiscvBase (
   output              iBus_cmd_valid,

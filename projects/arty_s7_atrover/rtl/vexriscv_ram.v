@@ -23,8 +23,9 @@ module vexriscv_ram #(
   input wire  [NB_COL-1:0]              dbus_we,    // Port B write enable
   input wire  [$clog2(RAM_DEPTH-1)-1:0] dbus_addr,  // Port B address bus, width determined from RAM_DEPTH
   input wire  [(NB_COL*COL_WIDTH)-1:0]  dbus_din,   // Port B RAM input data
-  output wire [(NB_COL*COL_WIDTH)-1:0]  dbus_dout,  // Port B RAM output data
-)
+  output wire [(NB_COL*COL_WIDTH)-1:0]  dbus_dout   // Port B RAM output data
+);
+  
   reg [(NB_COL*COL_WIDTH)-1:0] vexriscv_mem [RAM_DEPTH-1:0];
   reg [(NB_COL*COL_WIDTH)-1:0] ibus_ram_data = {(NB_COL*COL_WIDTH){1'b0}};
   reg [(NB_COL*COL_WIDTH)-1:0] dbus_ram_data = {(NB_COL*COL_WIDTH){1'b0}};
@@ -60,7 +61,7 @@ module vexriscv_ram #(
                vexriscv_mem[dbus_addr][(i+1)*COL_WIDTH-1:i*COL_WIDTH] <= dbus_din[(i+1)*COL_WIDTH-1:i*COL_WIDTH];
                dbus_ram_data[(i+1)*COL_WIDTH-1:i*COL_WIDTH] <= dbus_din[(i+1)*COL_WIDTH-1:i*COL_WIDTH];
              end else begin
-               dbus_ram_data[(i+1)*COL_WIDTH-1:i*COL_WIDTH] <= vexriscv_mem[addrb][(i+1)*COL_WIDTH-1:i*COL_WIDTH];
+               dbus_ram_data[(i+1)*COL_WIDTH-1:i*COL_WIDTH] <= vexriscv_mem[dbus_addr][(i+1)*COL_WIDTH-1:i*COL_WIDTH];
              end
        end
   endgenerate

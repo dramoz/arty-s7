@@ -48,3 +48,4 @@ results.xml
 
 # Logs capture
 typescript
+*.tmp
