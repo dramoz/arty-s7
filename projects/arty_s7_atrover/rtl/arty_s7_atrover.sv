@@ -279,6 +279,12 @@ module arty_s7_atrover #(
     rgb1        = io_regs[RGB1_REG][2:0] & { 3{rgb1_pwm} };
   end: rgb_comb
   
+  // UART0
+  always_comb begin: uart0_comb
+    // = io_regs[UART0_TX];
+    uart_tx = 1'b1;
+  end: uart0_comb
+  
   always_comb dBus_rsp_data = (io_slct) ? (io_rdata) : (mem_rdata);
   // --------------------------------------------------
   // Interrupts handlers
