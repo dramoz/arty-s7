@@ -16,8 +16,8 @@
 
 | Port name | Direction | Type        | Description |
 | --------- | --------- | ----------- | ----------- |
-| reset     | input     |             |             |
-| clk       | input     |             |             |
+| resetn    | input     | wire        |             |
+| clk       | input     | wire        |             |
 | sw        | input     | wire  [3:0] |             |
 | btn       | input     | wire  [3:0] |             |
 | leds      | output    | [3:0]       |             |
