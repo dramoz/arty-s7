@@ -118,7 +118,9 @@ The VexRiscv is a plugin-based HDL RISC-V core. For this project, a simple archi
 
 The generated core has the following IO ports:
 
-| <img src="docs/doc_internal/VexRiscvBase.svg" alt="VexRiscvBase"/> |
+<img src="docs/doc_internal/VexRiscvBase.svg" alt="VexRiscvBase" style="zoom:100%;" />
+
+| <img src="docs/doc_internal/VexRiscvBase.svg" alt="VexRiscvBase" style="zoom:400%;" /> |
 | :----------------------------------------------------------: |
 |            *Arty-S7 VexRiscv core block diagram*             |
 
