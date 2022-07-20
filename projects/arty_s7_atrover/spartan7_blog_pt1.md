@@ -116,6 +116,18 @@ The VexRiscv is a plugin-based HDL RISC-V core. For this project, a simple archi
 
 #### IP
 
+The generated core has the following IO ports:
+
+| <img src="docs/doc_internal/VexRiscvBase.svg" alt="VexRiscvBase" style="zoom:50%;" /> |
+| :----------------------------------------------------------: |
+|            *Arty-S7 VexRiscv core block diagram*             |
+
+As the generated processor core does not have any memory instantiation, the instruction/data memory is created as a true dual-port RAM using Vivado.
+
+| <img src="assets/vivado-language-templates.png" alt="vivado-language-templates" style="zoom:100%;" /> |
+| :----------------------------------------------------------: |
+|                 *Vivado Language Templates*                  |
+
 
 
 #### Resource utilization
