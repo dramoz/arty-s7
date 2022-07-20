@@ -168,7 +168,7 @@ Selecting the template:
 
 <details>
   <summary>Vivado Utilization Report</summary>
-  <embed type="text/html" src="assets/base_arch_utilization.txt">
+  <embed type="text/html" src="assets/base_arch_utilization.txt" width="500" height="200">
 </details>
 
 <p align = "center">
