@@ -134,7 +134,7 @@ As the generated processor core does not have any memory instantiation, the inst
 <i>Vivado Language Templates</i>
 </p>
 
-
+> ⚠ Instruction and data memory share the same memory block, where instruction access is read-only while data access is read/write (which would be useful if JTAG debug is implemented)
 
 #### Resource utilization
 

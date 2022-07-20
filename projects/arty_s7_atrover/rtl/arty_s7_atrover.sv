@@ -36,27 +36,61 @@ module arty_s7_atrover (
   logic              externalInterrupt;
   logic              softwareInterrupt;
   
-  VexRiscvBase VexRiscvBase_inst (
-    .clk                      (clk                                             ), //i
-    .reset                    (reset                                           ), //i
-    .iBus_cmd_valid           (iBus_cmd_valid                ), //o
-    .iBus_cmd_ready           (iBus_cmd_ready                                  ), //i
-    .iBus_cmd_payload_pc      (iBus_cmd_payload_pc[31:0]     ), //o
-    .iBus_rsp_valid           (iBus_rsp_valid                                  ), //i
-    .iBus_rsp_payload_error   (iBus_rsp_payload_error                          ), //i
-    .iBus_rsp_payload_inst    (iBus_rsp_payload_inst[31:0]                     ), //i
-    .dBus_cmd_valid           (dBus_cmd_valid                ), //o
-    .dBus_cmd_ready           (dBus_cmd_ready                                  ), //i
-    .dBus_cmd_payload_wr      (dBus_cmd_payload_wr           ), //o
-    .dBus_cmd_payload_address (dBus_cmd_payload_address[31:0]), //o
-    .dBus_cmd_payload_data    (dBus_cmd_payload_data[31:0]   ), //o
-    .dBus_cmd_payload_size    (dBus_cmd_payload_size[1:0]    ), //o
-    .dBus_rsp_ready           (dBus_rsp_ready                                  ), //i
-    .dBus_rsp_error           (dBus_rsp_error                                  ), //i
-    .dBus_rsp_data            (dBus_rsp_data[31:0]                             ), //i
-    .timerInterrupt           (timerInterrupt                                  ), //i
-    .externalInterrupt        (externalInterrupt                               ), //i
-    .softwareInterrupt        (softwareInterrupt                               )  //i
+  vexriscv_ram #(
+    parameter RAM_DEPTH = 16384
+  )
+  vexriscv_ram_inst
+  (
+    .reset(reset),
+    .clk(clk),
+    .ibus_en(1'b1),
+    .ibus_we(1'b0),
+    .ibus_addr(iBus_cmd_payload_pc),
+    .ibus_din('0),
+    .ibus_regce(1'b0),
+    .ibus_dout(iBus_rsp_payload_inst),
+    .dbus_en(1'b1),
+    .dbus_we(dbus_we),
+    .dbus_addr(dBus_cmd_payload_address),
+    .dbus_din(dBus_cmd_payload_data),
+    .dbus_regce(1'b0),
+    .dbus_dout(dBus_rsp_data)
   );
-
+  
+  assign iBus_cmd_ready = 1'b1;
+  assign dBus_cmd_ready = 1'b1;
+  always_ff(@posedge clk) begin
+    iBus_rsp_valid <= iBus_cmd_valid;
+    dBus_rsp_valid <= dBus_cmd_valid;
+  end
+  
+  assign iBus_rsp_payload_error = 1'b0;
+  
+  assign timerInterrupt    = 1'b0;
+  assign externalInterrupt = 1'b0;
+  assign softwareInterrupt = 1'b0;
+  
+  VexRiscvBase VexRiscvBase_inst (
+    .clk                      (clk),
+    .reset                    (reset),
+    .iBus_cmd_valid           (iBus_cmd_valid),
+    .iBus_cmd_ready           (iBus_cmd_ready),
+    .iBus_cmd_payload_pc      (iBus_cmd_payload_pc),
+    .iBus_rsp_valid           (iBus_rsp_valid),
+    .iBus_rsp_payload_error   (iBus_rsp_payload_error),
+    .iBus_rsp_payload_inst    (iBus_rsp_payload_inst),
+    .dBus_cmd_valid           (dBus_cmd_valid),
+    .dBus_cmd_ready           (dBus_cmd_ready),
+    .dBus_cmd_payload_wr      (dBus_cmd_payload_wr),
+    .dBus_cmd_payload_address (dBus_cmd_payload_address),
+    .dBus_cmd_payload_data    (dBus_cmd_payload_data),
+    .dBus_cmd_payload_size    (dBus_cmd_payload_size),
+    .dBus_rsp_ready           (dBus_rsp_ready),
+    .dBus_rsp_error           (dBus_rsp_error),
+    .dBus_rsp_data            (dBus_rsp_data),
+    .timerInterrupt           (timerInterrupt),
+    .externalInterrupt        (externalInterrupt),
+    .softwareInterrupt        (softwareInterrupt)
+  );
+  
 endmodule
