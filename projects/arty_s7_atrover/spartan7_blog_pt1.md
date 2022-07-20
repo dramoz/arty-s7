@@ -1,4 +1,4 @@
-
+****
 
 # 🚎 Arty-S7-Rover (base architecture)
 
@@ -370,7 +370,6 @@ Table of Contents
 
   </pre>
 </details>
-</div>
 
 <p align = "center">
   <img src="assets/base_arch_impl_rpt.png" alt="base architecture implementation report" style="zoom:100%;" title="Vivado Language Templates" />
