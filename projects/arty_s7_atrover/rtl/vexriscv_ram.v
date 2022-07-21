@@ -26,20 +26,30 @@ module vexriscv_ram #(
   output wire [(NB_COL*COL_WIDTH)-1:0]  dbus_dout   // Port B RAM output data
 );
   
-  reg [(NB_COL*COL_WIDTH)-1:0] vexriscv_mem [RAM_DEPTH-1:0];
+  reg [(NB_COL*COL_WIDTH)-1:0] vexriscv_mem[RAM_DEPTH];
   reg [(NB_COL*COL_WIDTH)-1:0] ibus_ram_data = {(NB_COL*COL_WIDTH){1'b0}};
   reg [(NB_COL*COL_WIDTH)-1:0] dbus_ram_data = {(NB_COL*COL_WIDTH){1'b0}};
   
   // The following code either initializes the memory values to a specified file or to all zeros to match hardware
   generate
     if (INIT_FILE != "") begin: use_init_file
-      initial
-        $readmemh(INIT_FILE, vexriscv_mem, 0, RAM_DEPTH-1);
+      integer inx;
+      integer jnx;
+      bit [NB_COL*COL_WIDTH-1:0] swap;
+      initial begin
+        $readmemh(INIT_FILE, vexriscv_mem);
+        /*for(inx = 0; inx < RAM_DEPTH; inx = inx + 1) begin
+          swap = vexriscv_mem[inx];
+          for(jnx = 0; jnx < NB_COL; jnx = jnx + 1) begin
+            vexriscv_mem[inx][(jnx+1)*COL_WIDTH-1:jnx*COL_WIDTH] = swap[(jnx+1)*COL_WIDTH-1:jnx*COL_WIDTH];
+          end
+        end*/
+      end
     end else begin: init_bram_to_zero
-      integer ram_index;
+      integer inx;
       initial
-        for (ram_index = 0; ram_index < RAM_DEPTH; ram_index = ram_index + 1)
-          vexriscv_mem[ram_index] = {(NB_COL*COL_WIDTH){1'b0}};
+        for (inx = 0; inx < RAM_DEPTH; inx = inx + 1)
+          vexriscv_mem[inx] = {(NB_COL*COL_WIDTH){1'b0}};
     end
   endgenerate
   
@@ -54,7 +64,7 @@ module vexriscv_ram #(
              end else begin
                ibus_ram_data[(i+1)*COL_WIDTH-1:i*COL_WIDTH] <= vexriscv_mem[ibus_addr][(i+1)*COL_WIDTH-1:i*COL_WIDTH];
              end
-  
+             
          always @(posedge clk)
            if (dbus_en)
              if (dbus_we[i]) begin

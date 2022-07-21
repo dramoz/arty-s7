@@ -1,19 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Thu Jul 21 00:28:38 2022
+[*] Thu Jul 21 03:55:47 2022
 [*]
 [dumpfile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/dump.fst"
-[dumpfile_mtime] "Thu Jul 21 00:22:30 2022"
-[dumpfile_size] 20588
+[dumpfile_mtime] "Thu Jul 21 03:53:46 2022"
+[dumpfile_size] 29850
 [savefile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/arty_s7_atrover.gtkw"
 [timestart] 0
 [size] 2560 1370
-[pos] -666 -40
-*-17.135719 326800 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1 -1
+*-15.397877 50000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] arty_s7_atrover.
 [sst_width] 379
 [signals_width] 404
 [sst_expanded] 1
-[sst_vpaned_height] 412
+[sst_vpaned_height] 411
 @28
 arty_s7_atrover.resetn
 arty_s7_atrover.clk
@@ -39,6 +40,7 @@ arty_s7_atrover.uart_tx
 @800200
 -iBus
 @28
+arty_s7_atrover.iBus_rsp_payload_error
 arty_s7_atrover.iBus_cmd_valid
 @22
 arty_s7_atrover.iBus_cmd_payload_pc[31:0]
@@ -61,6 +63,7 @@ arty_s7_atrover.dBus_cmd_payload_size[1:0]
 arty_s7_atrover.dBus_cmd_payload_data[31:0]
 @28
 arty_s7_atrover.dBus_rsp_ready
+@29
 arty_s7_atrover.dBus_rsp_error
 @22
 arty_s7_atrover.dBus_rsp_data[31:0]
@@ -70,5 +73,41 @@ arty_s7_atrover.dBus_rsp_data[31:0]
 arty_s7_atrover.ibus_addr[12:0]
 arty_s7_atrover.dbus_we[3:0]
 arty_s7_atrover.dbus_addr[12:0]
+@200
+---------------------
+@800200
+-VexRiscv-RAM
+@420
+arty_s7_atrover.vexriscv_ram_inst.COL_WIDTH
+arty_s7_atrover.vexriscv_ram_inst.NB_COL
+arty_s7_atrover.vexriscv_ram_inst.RAM_DEPTH
+@28
+arty_s7_atrover.boot_reset
+arty_s7_atrover.clk
+@800200
+-iBus
+@28
+arty_s7_atrover.iBus_cmd_valid
+arty_s7_atrover.iBus_rsp_valid
+@22
+arty_s7_atrover.vexriscv_ram_inst.ibus_we[3:0]
+arty_s7_atrover.vexriscv_ram_inst.ibus_addr[12:0]
+arty_s7_atrover.vexriscv_ram_inst.ibus_din[31:0]
+arty_s7_atrover.vexriscv_ram_inst.ibus_dout[31:0]
+@1000200
+-iBus
+@800200
+-dBus
+@28
+arty_s7_atrover.dBus_cmd_valid
+arty_s7_atrover.dBus_rsp_ready
+@22
+arty_s7_atrover.vexriscv_ram_inst.dbus_we[3:0]
+arty_s7_atrover.vexriscv_ram_inst.dbus_addr[12:0]
+arty_s7_atrover.vexriscv_ram_inst.dbus_din[31:0]
+arty_s7_atrover.vexriscv_ram_inst.dbus_dout[31:0]
+@1000200
+-dBus
+-VexRiscv-RAM
 [pattern_trace] 1
 [pattern_trace] 0

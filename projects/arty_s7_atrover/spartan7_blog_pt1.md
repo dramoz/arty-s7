@@ -102,6 +102,21 @@ riscv64-unknown-elf-gcc --version
 > warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ```
 
+#### Generating HEX file
+
+To generate a HEX file with the RISC-V program, it is necessary to convert it with [`elf2hex`].
+
+```bash
+git clone git://github.com/sifive/elf2hex.git
+cd elf2hex
+autoreconf -i
+./configure --target=riscv64-unknown-elf
+make
+make install
+```
+
+
+
 ### Other tools
 
 Other tools used in this project
