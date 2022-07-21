@@ -41,6 +41,9 @@ async def free_run_arty_s7_atrover(dut, times=10, duration=1, units='us'):
   dut._log.info(f"Running {duration} {units} (CLK_FREQ:{(CLK_FREQ/1e6)} MHz, CLK_PERIOD: {clk_period} ns)")
   await reset(dut)
   
+  await Timer(1, units='us')
+  dut.btn.value = 0x5
+  
   for _ in range(times):
     dut._log.info(f".")
     await Timer(duration, units=units)

@@ -38,12 +38,6 @@ module vexriscv_ram #(
       bit [NB_COL*COL_WIDTH-1:0] swap;
       initial begin
         $readmemh(INIT_FILE, vexriscv_mem);
-        /*for(inx = 0; inx < RAM_DEPTH; inx = inx + 1) begin
-          swap = vexriscv_mem[inx];
-          for(jnx = 0; jnx < NB_COL; jnx = jnx + 1) begin
-            vexriscv_mem[inx][(jnx+1)*COL_WIDTH-1:jnx*COL_WIDTH] = swap[(jnx+1)*COL_WIDTH-1:jnx*COL_WIDTH];
-          end
-        end*/
       end
     end else begin: init_bram_to_zero
       integer inx;

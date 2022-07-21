@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Thu Jul 21 03:55:47 2022
+[*] Thu Jul 21 05:11:33 2022
 [*]
 [dumpfile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/dump.fst"
-[dumpfile_mtime] "Thu Jul 21 03:53:46 2022"
-[dumpfile_size] 29850
+[dumpfile_mtime] "Thu Jul 21 05:09:14 2022"
+[dumpfile_size] 26842
 [savefile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/arty_s7_atrover.gtkw"
-[timestart] 0
+[timestart] 93400
 [size] 2560 1370
 [pos] -1 -1
-*-15.397877 50000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-15.798108 305600 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] arty_s7_atrover.
 [sst_width] 379
 [signals_width] 404
@@ -63,7 +63,6 @@ arty_s7_atrover.dBus_cmd_payload_size[1:0]
 arty_s7_atrover.dBus_cmd_payload_data[31:0]
 @28
 arty_s7_atrover.dBus_rsp_ready
-@29
 arty_s7_atrover.dBus_rsp_error
 @22
 arty_s7_atrover.dBus_rsp_data[31:0]
@@ -75,7 +74,7 @@ arty_s7_atrover.dbus_we[3:0]
 arty_s7_atrover.dbus_addr[12:0]
 @200
 ---------------------
-@800200
+@c00200
 -VexRiscv-RAM
 @420
 arty_s7_atrover.vexriscv_ram_inst.COL_WIDTH
@@ -108,6 +107,7 @@ arty_s7_atrover.vexriscv_ram_inst.dbus_din[31:0]
 arty_s7_atrover.vexriscv_ram_inst.dbus_dout[31:0]
 @1000200
 -dBus
+@1401200
 -VexRiscv-RAM
 [pattern_trace] 1
 [pattern_trace] 0
