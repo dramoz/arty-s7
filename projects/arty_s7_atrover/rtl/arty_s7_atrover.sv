@@ -39,9 +39,12 @@ module arty_s7_atrover #(
   
   // ------------------------------------------------------------
   // Button debouncing parameters
-`ifdef COCOTB
-  localparam CLICK_DEBOUNCE_MS = 10;
-  localparam LONG_PRESS_DURATION_MS = 1000;
+`ifdef COCOTB_SIM
+  initial begin
+    $display("Setting BTN_DEBOUNCE for CoCoTB sim...");
+  end
+  localparam CLICK_DEBOUNCE_MS = 0;
+  localparam LONG_PRESS_DURATION_MS = 0;
 `else
   localparam CLICK_DEBOUNCE_MS = 10;
   localparam LONG_PRESS_DURATION_MS = 1000;
