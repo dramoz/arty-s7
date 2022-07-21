@@ -24,9 +24,9 @@ async def init(dut, clk_period, units):
   cocotb.start_soon(Clock(signal=dut.clk, period=clk_period, units="ns").start())
   
 
-async def reset(dut):
+async def reset(dut, clk_cycles=12):
   dut.resetn.value = 0
-  for _ in range(5):
+  for _ in range(clk_cycles):
     await RisingEdge(dut.clk)
     
   dut.resetn.value = 1

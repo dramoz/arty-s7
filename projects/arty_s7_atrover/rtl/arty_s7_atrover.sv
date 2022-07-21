@@ -51,6 +51,7 @@ module arty_s7_atrover #(
 `endif
   // ------------------------------------------------------------
   // System reset
+  logic do_reset;
   logic sys_reset;
   logic boot_reset;
   
@@ -67,9 +68,11 @@ module arty_s7_atrover #(
     .reset(1'b0),
     .clk(clk),
     .usr_btn(resetn),
-    .click(sys_reset),
+    .click(do_reset),
     .long_press(boot_reset)
   );
+  always_comb sys_reset = do_reset | boot_reset;
+  
   // --------------------------------------------------
   localparam RISCV_RAM_ADDR_WL = $clog2(RISCV_RAM_DEPTH-1);
   
