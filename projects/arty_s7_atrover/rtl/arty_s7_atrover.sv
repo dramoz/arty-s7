@@ -16,7 +16,7 @@ module arty_s7_atrover #(
   parameter CLK_FREQ        = 100000000,
   parameter RISCV_RAM_DEPTH = 8192,
   parameter RISCV_WL        = 32,
-  parameter RISCV_TEXT      = "../vexriscv_generator/VexRiscvBase/build/main.hex"
+  parameter RISCV_TEXT      = "../vexriscv_generator/VexRiscvBase/build/main.mem"
 )
 (
   input wire resetn,
