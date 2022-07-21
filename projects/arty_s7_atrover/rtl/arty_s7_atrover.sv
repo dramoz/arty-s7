@@ -39,8 +39,13 @@ module arty_s7_atrover #(
   
   // ------------------------------------------------------------
   // Button debouncing parameters
+`ifdef COCOTB
   localparam CLICK_DEBOUNCE_MS = 10;
   localparam LONG_PRESS_DURATION_MS = 1000;
+`else
+  localparam CLICK_DEBOUNCE_MS = 10;
+  localparam LONG_PRESS_DURATION_MS = 1000;
+`endif
   // ------------------------------------------------------------
   // System reset
   logic sys_reset;

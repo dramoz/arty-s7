@@ -1,0 +1,74 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Thu Jul 21 00:28:38 2022
+[*]
+[dumpfile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/dump.fst"
+[dumpfile_mtime] "Thu Jul 21 00:22:30 2022"
+[dumpfile_size] 20588
+[savefile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/arty_s7_atrover.gtkw"
+[timestart] 0
+[size] 2560 1370
+[pos] -666 -40
+*-17.135719 326800 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 379
+[signals_width] 404
+[sst_expanded] 1
+[sst_vpaned_height] 412
+@28
+arty_s7_atrover.resetn
+arty_s7_atrover.clk
+arty_s7_atrover.boot_reset
+arty_s7_atrover.sys_reset
+@800200
+-IO
+@22
+arty_s7_atrover.btn[3:0]
+arty_s7_atrover.leds[3:0]
+@28
+arty_s7_atrover.rgb0[2:0]
+arty_s7_atrover.rgb1[2:0]
+@22
+arty_s7_atrover.sw[3:0]
+@28
+arty_s7_atrover.uart_rx
+arty_s7_atrover.uart_tx
+@1000200
+-IO
+@200
+---------------------
+@800200
+-iBus
+@28
+arty_s7_atrover.iBus_cmd_valid
+@22
+arty_s7_atrover.iBus_cmd_payload_pc[31:0]
+@28
+arty_s7_atrover.iBus_rsp_valid
+@22
+arty_s7_atrover.iBus_rsp_payload_inst[31:0]
+@1000200
+-iBus
+@800200
+-dBus
+@28
+arty_s7_atrover.dBus_cmd_valid
+@22
+arty_s7_atrover.dBus_cmd_payload_address[31:0]
+@28
+arty_s7_atrover.dBus_cmd_payload_wr
+arty_s7_atrover.dBus_cmd_payload_size[1:0]
+@22
+arty_s7_atrover.dBus_cmd_payload_data[31:0]
+@28
+arty_s7_atrover.dBus_rsp_ready
+arty_s7_atrover.dBus_rsp_error
+@22
+arty_s7_atrover.dBus_rsp_data[31:0]
+@1000200
+-dBus
+@22
+arty_s7_atrover.ibus_addr[12:0]
+arty_s7_atrover.dbus_we[3:0]
+arty_s7_atrover.dbus_addr[12:0]
+[pattern_trace] 1
+[pattern_trace] 0
