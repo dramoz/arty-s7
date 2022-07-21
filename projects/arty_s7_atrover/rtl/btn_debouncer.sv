@@ -15,7 +15,7 @@ module btn_debouncer #(
   parameter BUTTON_INPUT_LEVEL = 1,
   parameter CLICK_OUTPUT_LEVEL = 1,
   parameter CLICK_DEBOUNCE_MS = 10,
-  parameter LONG_PRESS_OUTPUT_LEVEL = 1,
+  parameter PRESS_OUTPUT_LEVEL = 1,
   parameter LONG_PRESS_DURATION_MS = 1000
 )
 (
@@ -23,6 +23,7 @@ module btn_debouncer #(
   input wire clk,
   input wire usr_btn,
   output logic click,
+  output logic press,
   output logic long_press
 );
   // Reset logic
@@ -34,7 +35,8 @@ module btn_debouncer #(
   
   // Send proper rst
   assign click = (boot_counter==CLICK_CLKS[0+:BOOT_CNT_WL]) ? (CLICK_OUTPUT_LEVEL) : (~CLICK_OUTPUT_LEVEL);
-  assign long_press = (boot_counter>=LONG_PRESS_CLKS[0+:BOOT_CNT_WL]) ? (LONG_PRESS_OUTPUT_LEVEL):(~LONG_PRESS_OUTPUT_LEVEL);
+  assign press = (boot_counter>=CLICK_CLKS[0+:BOOT_CNT_WL]) ? (PRESS_OUTPUT_LEVEL):(~PRESS_OUTPUT_LEVEL);
+  assign long_press = (boot_counter>=LONG_PRESS_CLKS[0+:BOOT_CNT_WL]) ? (PRESS_OUTPUT_LEVEL):(~PRESS_OUTPUT_LEVEL);
   
   always_ff @( posedge clk ) begin
     if(reset) begin

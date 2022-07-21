@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Thu Jul 21 05:11:33 2022
+[*] Thu Jul 21 16:51:40 2022
 [*]
 [dumpfile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/dump.fst"
-[dumpfile_mtime] "Thu Jul 21 05:09:14 2022"
-[dumpfile_size] 26842
+[dumpfile_mtime] "Thu Jul 21 16:47:12 2022"
+[dumpfile_size] 49008
 [savefile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/arty_s7_atrover.gtkw"
-[timestart] 93400
+[timestart] 0
 [size] 2560 1370
 [pos] -1 -1
-*-15.798108 305600 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-20.831257 310000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] arty_s7_atrover.
 [sst_width] 379
 [signals_width] 404
 [sst_expanded] 1
-[sst_vpaned_height] 411
+[sst_vpaned_height] 410
 @28
 arty_s7_atrover.resetn
 arty_s7_atrover.clk
@@ -40,6 +40,8 @@ arty_s7_atrover.uart_tx
 @800200
 -iBus
 @28
+arty_s7_atrover.sys_reset
+arty_s7_atrover.clk
 arty_s7_atrover.iBus_rsp_payload_error
 arty_s7_atrover.iBus_cmd_valid
 @22
@@ -53,6 +55,8 @@ arty_s7_atrover.iBus_rsp_payload_inst[31:0]
 @800200
 -dBus
 @28
+arty_s7_atrover.sys_reset
+arty_s7_atrover.clk
 arty_s7_atrover.dBus_cmd_valid
 @22
 arty_s7_atrover.dBus_cmd_payload_address[31:0]
@@ -68,10 +72,6 @@ arty_s7_atrover.dBus_rsp_error
 arty_s7_atrover.dBus_rsp_data[31:0]
 @1000200
 -dBus
-@22
-arty_s7_atrover.ibus_addr[12:0]
-arty_s7_atrover.dbus_we[3:0]
-arty_s7_atrover.dbus_addr[12:0]
 @200
 ---------------------
 @c00200
@@ -109,5 +109,44 @@ arty_s7_atrover.vexriscv_ram_inst.dbus_dout[31:0]
 -dBus
 @1401200
 -VexRiscv-RAM
+@800200
+-IO-access
+@28
+arty_s7_atrover.sys_reset
+arty_s7_atrover.clk
+@29
+arty_s7_atrover.dBus_cmd_valid
+@28
+arty_s7_atrover.io_slct
+arty_s7_atrover.io_wen
+@24
+arty_s7_atrover.io_addr[3:0]
+@22
+arty_s7_atrover.io_rdata[31:0]
+arty_s7_atrover.io_wdata[31:0]
+@800200
+-io_regs
+@24
+arty_s7_atrover.io_regs[0][31:0]
+arty_s7_atrover.io_regs[1][31:0]
+arty_s7_atrover.io_regs[2][31:0]
+arty_s7_atrover.io_regs[3][31:0]
+arty_s7_atrover.io_regs[4][31:0]
+arty_s7_atrover.io_regs[5][31:0]
+arty_s7_atrover.io_regs[6][31:0]
+arty_s7_atrover.io_regs[7][31:0]
+arty_s7_atrover.io_regs[8][31:0]
+arty_s7_atrover.io_regs[9][31:0]
+arty_s7_atrover.io_regs[10][31:0]
+arty_s7_atrover.io_regs[11][31:0]
+arty_s7_atrover.io_regs[12][31:0]
+arty_s7_atrover.io_regs[13][31:0]
+arty_s7_atrover.io_regs[14][31:0]
+arty_s7_atrover.io_regs[15][31:0]
+@1000200
+-io_regs
+-IO-access
+@22
+arty_s7_atrover.btn_dbncd[3:0]
 [pattern_trace] 1
 [pattern_trace] 0

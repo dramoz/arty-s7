@@ -61,7 +61,7 @@ module arty_s7_atrover #(
     .BUTTON_INPUT_LEVEL(0),
     .CLICK_OUTPUT_LEVEL(1),
     .CLICK_DEBOUNCE_MS(CLICK_DEBOUNCE_MS),
-    .LONG_PRESS_OUTPUT_LEVEL(1),
+    .PRESS_OUTPUT_LEVEL(1),
     .LONG_PRESS_DURATION_MS(LONG_PRESS_DURATION_MS)
   )
   reset_btn_debouncer_inst(
@@ -69,6 +69,7 @@ module arty_s7_atrover #(
     .clk(clk),
     .usr_btn(resetn),
     .click(do_reset),
+    .press(),
     .long_press(boot_reset)
   );
   always_comb sys_reset = do_reset | boot_reset;
@@ -180,14 +181,15 @@ module arty_s7_atrover #(
         .BUTTON_INPUT_LEVEL(1),
         .CLICK_OUTPUT_LEVEL(1),
         .CLICK_DEBOUNCE_MS(CLICK_DEBOUNCE_MS),
-        .LONG_PRESS_OUTPUT_LEVEL(1),
+        .PRESS_OUTPUT_LEVEL(1),
         .LONG_PRESS_DURATION_MS(LONG_PRESS_DURATION_MS)
       )
       reset_btn_debouncer_inst(
         .reset(sys_reset),
         .clk(clk),
         .usr_btn(btn[i]),
-        .click(btn_dbncd[i]),
+        .click(),
+        .press(btn_dbncd[i]),
         .long_press()
       );
     end: btn_debouncer_gen
@@ -293,7 +295,7 @@ module arty_s7_atrover #(
   // UART0
   always_comb begin: uart0_comb
     // = io_regs[UART0_TX];
-    uart_tx = 1'b1;
+    uart_tx = uart_rx;
   end: uart0_comb
   
   always_comb dBus_rsp_data = (io_slct) ? (io_rdata) : (mem_rdata);

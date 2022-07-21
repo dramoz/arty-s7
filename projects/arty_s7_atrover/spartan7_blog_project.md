@@ -115,7 +115,12 @@ make
 make install
 ```
 
+### Verification Tools
 
+[<img src="https://www.veripool.org/img/verilator_256_200_min.png" alt="Logo" style="height:3em;" />](https://veripool.org/guide/latest/index.html) [<img src="https://raw.githubusercontent.com/cocotb/cocotb-web/master/assets/img/cocotb-logo.svg" alt="CoCoTB" style="height:2em;" />](https://docs.cocotb.org/en/stable/) 
+
+- [**Verilator**](https://github.com/verilator/verilator) is the fastest Verilog/SystemVerilog simulator.
+- [**cocotb**](https://github.com/cocotb/cocotb) is a *COroutine* based *COsimulation* *TestBench* environment for verifying VHDL and SystemVerilog [RTL](https://docs.cocotb.org/en/stable/glossary.html#term-RTL) using [Python](https://www.python.org/).
 
 ### Other tools
 
@@ -199,9 +204,5 @@ A full utilization report can be found in [Base Architecture Utilization Report]
 <p align = "center">
 <i>Base Architecture Implementation Report (Vivado)</i>
 </p>
-
-
-## Future work
-
 ## References
 
