@@ -55,8 +55,10 @@ $(info $(VERILOG_SOURCES) )
 
 # -----------------------------------------------------------------------
 # top-lvl parameters
-export HW_PARAM_CLK_FREQ ?= 12000000
-
+export HW_PARAM_CLK_FREQ        ?= 100000000
+export HW_PARAM_RISCV_RAM_DEPTH ?= 8192
+export HW_PARAM_RISCV_WL        ?= 32
+export HW_PARAM_RISCV_TEXT      ?= '"../vexriscv_generator/VexRiscvBase/build/main.mem"'
 # -----------------------------------------------------------------------
 # --------------------------------------
 # - Verilator -
@@ -71,6 +73,9 @@ ifeq ($(SIM), verilator)
   # --------------------------------------
   # top-lvl parameters
   EXTRA_ARGS += -GCLK_FREQ=$(HW_PARAM_CLK_FREQ)
+  EXTRA_ARGS += -GRISCV_RAM_DEPTH=$(HW_PARAM_RISCV_RAM_DEPTH)
+  EXTRA_ARGS += -GRISCV_WL=$(HW_PARAM_RISCV_WL)
+  EXTRA_ARGS += -GRISCV_TEXT=$(HW_PARAM_RISCV_TEXT)
   
   # --------------------------------------
   # wave | coverage
@@ -92,7 +97,10 @@ ifeq ($(SIM), icarus)
   # --------------------------------------
   # top-lvl parameters
   COMPILE_ARGS += -P $(TOPLEVEL).CLK_FREQ=$(HW_PARAM_CLK_FREQ)
-  
+  COMPILE_ARGS += -P $(TOPLEVEL).CLK_FREQ=$(HW_PARAM_CLK_FREQ)
+  COMPILE_ARGS += -P $(TOPLEVEL).RISCV_RAM_DEPTH=$(HW_PARAM_RISCV_RAM_DEPTH)
+  COMPILE_ARGS += -P $(TOPLEVEL).RISCV_WL=$(HW_PARAM_RISCV_WL)
+  COMPILE_ARGS += -P $(TOPLEVEL).RISCV_TEXT=$(HW_PARAM_RISCV_TEXT)
   # --------------------------------------
   # wave
   ifeq ($(WAVES), 1)
