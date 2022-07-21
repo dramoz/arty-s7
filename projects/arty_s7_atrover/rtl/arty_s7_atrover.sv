@@ -116,7 +116,11 @@ module arty_s7_atrover #(
   // ----------------------------------------
   // IO or Mem access?
   logic io_slct;
+  logic io_slct_d;
   always_comb io_slct = dBus_cmd_payload_address[RISCV_WL-1];
+  always_ff @( posedge clk ) begin
+    io_slct_d <= io_slct;
+  end
   
   // ----------------------------------------
   // Translate byte address to double-word address
@@ -256,7 +260,6 @@ module arty_s7_atrover #(
     io_wen   = dBus_cmd_payload_wr;
     io_addr  = dBus_cmd_payload_address[IO_SPACE_ADDR_WL+1:2];
     io_wdata = dBus_cmd_payload_data;
-    io_rdata = (io_wen) ? (io_wdata) : (io_regs[io_addr]);
   end
   
   always_ff @( posedge clk ) begin
@@ -265,6 +268,8 @@ module arty_s7_atrover #(
       
     end else begin
       if(dBus_cmd_valid && io_slct) begin
+        io_rdata <= (io_wen) ? (io_wdata) : (io_regs[io_addr]);
+        
         if(io_wen) begin
           io_regs[io_addr] <= io_wdata;
           
@@ -298,7 +303,7 @@ module arty_s7_atrover #(
     uart_tx = uart_rx;
   end: uart0_comb
   
-  always_comb dBus_rsp_data = (io_slct) ? (io_rdata) : (mem_rdata);
+  always_comb dBus_rsp_data = (io_slct_d) ? (io_rdata) : (mem_rdata);
   // --------------------------------------------------
   // Interrupts handlers
   assign timerInterrupt    = 1'b0;
