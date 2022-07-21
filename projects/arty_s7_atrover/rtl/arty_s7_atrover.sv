@@ -41,14 +41,19 @@ module arty_s7_atrover #(
   // Button debouncing parameters
 `ifdef COCOTB_SIM
   initial begin
-    $display("Setting BTN_DEBOUNCE for CoCoTB sim...");
+    $display("Setting SIM parameters...");
   end
   localparam CLICK_DEBOUNCE_MS = 0;
   localparam LONG_PRESS_DURATION_MS = 0;
+  localparam RGB_PWM_FREQ  = CLK_FREQ/32;
+  
 `else
   localparam CLICK_DEBOUNCE_MS = 10;
   localparam LONG_PRESS_DURATION_MS = 1000;
+  localparam RGB_PWM_FREQ  = 20000;
+  
 `endif
+  
   // ------------------------------------------------------------
   // System reset
   logic do_reset;
@@ -201,8 +206,7 @@ module arty_s7_atrover #(
   
   // --------------------------------------------------
   // RGB LEDs PWM (to lower intensity)
-  localparam RGB_PWM_FREQ  = 20000;
-  localparam PWM_DCYCLE_WL = $clog2(CLK_FREQ/RGB_PWM_FREQ);
+  localparam PWM_DCYCLE_WL = $clog2(CLK_FREQ/RGB_PWM_FREQ+1);
   logic [RISCV_WL-1:0] rgb0_dcycle;
   logic                rgb0_pwm;
   pwm

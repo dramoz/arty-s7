@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Thu Jul 21 16:51:40 2022
+[*] Thu Jul 21 18:14:26 2022
 [*]
 [dumpfile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/dump.fst"
-[dumpfile_mtime] "Thu Jul 21 16:47:12 2022"
-[dumpfile_size] 49008
+[dumpfile_mtime] "Thu Jul 21 18:13:56 2022"
+[dumpfile_size] 69940
 [savefile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/arty_s7_atrover.gtkw"
 [timestart] 0
 [size] 2560 1370
 [pos] -1 -1
-*-20.831257 310000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-20.918140 929000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] arty_s7_atrover.
 [sst_width] 379
 [signals_width] 404
@@ -23,12 +23,22 @@ arty_s7_atrover.sys_reset
 @800200
 -IO
 @22
+[color] 5
 arty_s7_atrover.btn[3:0]
+@800022
 arty_s7_atrover.leds[3:0]
+@28
+(0)arty_s7_atrover.leds[3:0]
+(1)arty_s7_atrover.leds[3:0]
+(2)arty_s7_atrover.leds[3:0]
+(3)arty_s7_atrover.leds[3:0]
+@1001200
+-group_end
 @28
 arty_s7_atrover.rgb0[2:0]
 arty_s7_atrover.rgb1[2:0]
 @22
+[color] 5
 arty_s7_atrover.sw[3:0]
 @28
 arty_s7_atrover.uart_rx
@@ -66,6 +76,7 @@ arty_s7_atrover.dBus_cmd_payload_size[1:0]
 @22
 arty_s7_atrover.dBus_cmd_payload_data[31:0]
 @28
+[color] 2
 arty_s7_atrover.dBus_rsp_ready
 arty_s7_atrover.dBus_rsp_error
 @22
@@ -109,14 +120,14 @@ arty_s7_atrover.vexriscv_ram_inst.dbus_dout[31:0]
 -dBus
 @1401200
 -VexRiscv-RAM
-@800200
+@200
+---------------------
+@c00200
 -IO-access
 @28
 arty_s7_atrover.sys_reset
 arty_s7_atrover.clk
-@29
 arty_s7_atrover.dBus_cmd_valid
-@28
 arty_s7_atrover.io_slct
 arty_s7_atrover.io_wen
 @24
@@ -135,7 +146,9 @@ arty_s7_atrover.io_regs[4][31:0]
 arty_s7_atrover.io_regs[5][31:0]
 arty_s7_atrover.io_regs[6][31:0]
 arty_s7_atrover.io_regs[7][31:0]
+[color] 5
 arty_s7_atrover.io_regs[8][31:0]
+[color] 5
 arty_s7_atrover.io_regs[9][31:0]
 arty_s7_atrover.io_regs[10][31:0]
 arty_s7_atrover.io_regs[11][31:0]
@@ -145,8 +158,24 @@ arty_s7_atrover.io_regs[14][31:0]
 arty_s7_atrover.io_regs[15][31:0]
 @1000200
 -io_regs
+@1401200
 -IO-access
-@22
-arty_s7_atrover.btn_dbncd[3:0]
+@c00200
+-rgb-pwm
+@28
+arty_s7_atrover.sys_reset
+arty_s7_atrover.clk
+arty_s7_atrover.rgb0[2:0]
+@24
+arty_s7_atrover.rgb0_dcycle[31:0]
+@28
+arty_s7_atrover.rgb0_pwm
+arty_s7_atrover.rgb1[2:0]
+@24
+arty_s7_atrover.rgb1_dcycle[31:0]
+@28
+arty_s7_atrover.rgb1_pwm
+@1401200
+-rgb-pwm
 [pattern_trace] 1
 [pattern_trace] 0

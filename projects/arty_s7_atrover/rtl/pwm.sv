@@ -15,7 +15,7 @@ module pwm
 #(
   parameter CLK_FREQ = 100000000,
   parameter PWM_FREQ = 20000,
-  parameter WL = $clog2(CLK_FREQ/PWM_FREQ)
+  parameter WL = $clog2(CLK_FREQ/PWM_FREQ+1)
 )
 (
   input  wire           reset,
@@ -25,8 +25,8 @@ module pwm
   output logic          o_pwm
 );
   
-  localparam PWM_MAX_CNT = int'(CLK_FREQ/PWM_FREQ);
-  logic [WL-1:0] pwm_cnt = '0;
+  localparam unsigned PWM_MAX_CNT = int'(CLK_FREQ/PWM_FREQ);
+  logic [WL-1:0] pwm_cnt;
   
   always_ff @( posedge clk ) begin : pwm_cnt_proc
     if (reset) begin
