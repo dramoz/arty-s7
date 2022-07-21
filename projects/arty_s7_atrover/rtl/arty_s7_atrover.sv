@@ -38,7 +38,7 @@ module arty_s7_atrover #(
   localparam RISCV_PLS_WL = $clog2(RISCV_WL_BYTES-1);  // VexRiscv dBus_cmd_payload_size (byte mem access)
   
   // ------------------------------------------------------------
-  // Button debouncing parameters
+  // IO parameters
 `ifdef COCOTB_SIM
   initial begin
     $display("Setting SIM parameters...");
@@ -46,11 +46,13 @@ module arty_s7_atrover #(
   localparam CLICK_DEBOUNCE_MS = 0;
   localparam LONG_PRESS_DURATION_MS = 0;
   localparam RGB_PWM_FREQ  = CLK_FREQ/32;
+  localparam UART0_BAUD_RATE = 1152000;
   
 `else
   localparam CLICK_DEBOUNCE_MS = 10;
   localparam LONG_PRESS_DURATION_MS = 1000;
   localparam RGB_PWM_FREQ  = 20000;
+  localparam UART0_BAUD_RATE = 115200;
   
 `endif
   
@@ -238,6 +240,9 @@ module arty_s7_atrover #(
   );
   // --------------------------------------------------
   // IO/Peripherals access
+  localparam IO_REG_SPACE = 16;
+  localparam IO_SPACE_ADDR_WL = $clog2(IO_REG_SPACE-1);
+  
   typedef enum  {
     DEBUG_REG            = 0,
     UART0_TX_REG         = 1,
@@ -251,8 +256,6 @@ module arty_s7_atrover #(
     SWITCHES_REG         = 9
   } io_registers;
   
-  localparam IO_REG_SPACE = 16;
-  localparam IO_SPACE_ADDR_WL = $clog2(IO_REG_SPACE-1);
   
   logic                io_wen;
   logic [IO_SPACE_ADDR_WL-1:0] io_addr;
@@ -278,20 +281,27 @@ module arty_s7_atrover #(
           io_regs[io_addr] <= io_wdata;
           
         end else begin: io_regs_vl_read_update
-          io_regs[UART0_RX_REG] <= '0;
           io_regs[BUTTONS_REG]  <= {28'd0, btn_dbncd};
           io_regs[SWITCHES_REG] <= {28'd0, sw};
           
+          // HW op. when reading back registers
+          case({ {(RISCV_WL-IO_SPACE_ADDR_WL){1'b0}}, io_addr})
+            UART0_RX_REG: begin
+              io_regs[io_addr][31] = 1'b0;
+            end
+          endcase
         end
       end
     end
   end
   
+  // ----------------------------------------
   // LEDs
   always_comb begin: leds_comb
     leds = io_regs[LEDS_REG][3:0];
   end: leds_comb
   
+  // ----------------------------------------
   // RGBs
   always_comb begin: rgb_comb
     rgb0_dcycle = io_regs[RGB0_DCYCLE_REG];
@@ -301,13 +311,70 @@ module arty_s7_atrover #(
     rgb1        = io_regs[RGB1_REG][2:0] & { 3{rgb1_pwm} };
   end: rgb_comb
   
+  // ----------------------------------------
   // UART0
+  // TX port
+  logic       uart0_tx_rdy;
+  logic       uart0_tx_vld;
+  logic [7:0] uart0_tx_data;
+  logic       uart0_tx_uart;
+  
+  // RX port
+  logic       uart0_rx_valid;
+  logic [7:0] uart0_rx_data;
+  logic [7:0] uart0_rx_data_d;
+  logic       uart0_rx_uart;
+  
+  uart_lite #(
+    .BAUD_RATE(UART0_BAUD_RATE),
+    .CLK_FREQUENCY(CLK_FREQ),
+    .DATA_BITS(8),
+    .RX_SAMPLES(3)
+  ) uart0_inst
+  (
+    .clk(clk),
+    .reset(sys_reset),
+    .tx_rdy(uart0_tx_rdy),
+    .tx_vld(uart0_tx_vld),
+    .tx_data(uart0_tx_data),
+    .tx_uart(uart0_tx_uart),
+    .rx_valid(uart0_rx_valid),
+    .rx_data(uart0_rx_data),
+    .rx_uart(uart0_rx_uart)
+  );
+  
   always_comb begin: uart0_comb
     // = io_regs[UART0_TX];
-    uart_tx = uart_rx;
+    uart_tx = uart0_tx_uart;
+    uart0_rx_uart = uart_rx;
   end: uart0_comb
   
+  always_ff @( posedge clk ) begin: uart0_proc
+    if(sys_reset) begin
+      uart0_tx_vld <= 0;
+      
+    end else begin
+      // RX
+      if(uart0_rx_valid) begin
+        io_regs[UART0_RX_REG] <= {1'b1, { (RISCV_WL-1-8){1'b0} }, uart0_rx_data};
+      end
+      
+      // TX
+      if(uart0_tx_rdy && io_regs[UART0_TX_REG][RISCV_WL-1]) begin
+        uart0_tx_vld <= 1'b1;
+        uart0_tx_data <= io_regs[UART0_TX_REG][7:0];
+        io_regs[UART0_TX_REG][RISCV_WL-1] = 0;
+        
+      end else begin
+        uart0_tx_vld <= 1'b0;
+        
+      end
+    end
+  end: uart0_proc
+  
+  // ----------------------------------------
   always_comb dBus_rsp_data = (io_slct_d) ? (io_rdata) : (mem_rdata);
+  
   // --------------------------------------------------
   // Interrupts handlers
   assign timerInterrupt    = 1'b0;

@@ -1,6 +1,7 @@
 ../rtl/cpu_layout.v
 ../rtl/btn_debouncer.sv
 ../rtl/pwm.sv
+../rtl/uart_lite.sv
 ../rtl/vexriscv_ram.v
 ../rtl/VexRiscvBase.v
 ../rtl/arty_s7_atrover.sv

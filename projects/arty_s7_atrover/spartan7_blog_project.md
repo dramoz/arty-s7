@@ -117,20 +117,23 @@ make install
 
 ### Verification Tools
 
-[<img src="https://www.veripool.org/img/verilator_256_200_min.png" alt="Logo" style="height:3em;" />](https://veripool.org/guide/latest/index.html) [<img src="https://raw.githubusercontent.com/cocotb/cocotb-web/master/assets/img/cocotb-logo.svg" alt="CoCoTB" style="height:2em;" />](https://docs.cocotb.org/en/stable/) 
+[<img src="https://www.veripool.org/img/verilator_256_200_min.png" alt="Logo" style="height:3em;" />](https://veripool.org/guide/latest/index.html) [<img src="https://raw.githubusercontent.com/cocotb/cocotb-web/master/assets/img/cocotb-logo.svg" alt="CoCoTB" style="height:2em;" />](https://docs.cocotb.org/en/stable/) <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Gtkwave_256x256x32.png" alt="File:Gtkwave 256x256x32.png" style="height:2em;" />
 
 - [**Verilator**](https://github.com/verilator/verilator) is the fastest Verilog/SystemVerilog simulator.
 - [**cocotb**](https://github.com/cocotb/cocotb) is a *COroutine* based *COsimulation* *TestBench* environment for verifying VHDL and SystemVerilog [RTL](https://docs.cocotb.org/en/stable/glossary.html#term-RTL) using [Python](https://www.python.org/).
+- [GTKwave](http://gtkwave.sourceforge.net/) is a fully featured [GTK+](http://www.gtk.org/) based wave viewer for Unix, Win32, and Mac OSX which reads LXT, LXT2, VZT, FST, and GHW files as well as standard Verilog VCD/EVCD files and allows their viewing.
 
 ### Other tools
 
 Other tools used in this project
 
-- [<img src="https://code.visualstudio.com/assets/images/code-stable.png" alt="VS Code icon" style="height:1em;" /> Visual Studio Code](https://code.visualstudio.com/)
+- [<img src="https://code.visualstudio.com/assets/images/code-stable.png" alt="VS Code icon" style="height:1em;" /> Visual Studio Code](https://code.visualstudio.com/) SystemVerilog and C/C++ editor
   - [<img src="https://teros-technology.gallerycdn.vsassets.io/extensions/teros-technology/teroshdl/2.0.7/1651778078435/Microsoft.VisualStudio.Services.Icons.Default" alt="img" style="height:1em;" /> TerosHDL](https://marketplace.visualstudio.com/items?itemName=teros-technology.teroshdl) plugin (for documentation generation)
--  [<img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/virtualbox_logo_icon_169253.png" alt="VirtualBox" style="height:1em" /> VirtualBox](https://www.virtualbox.org/)
+-  [<img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/virtualbox_logo_icon_169253.png" alt="VirtualBox" style="height:1em" /> VirtualBox](https://www.virtualbox.org/) for Ubuntu20 on Windows11Pro
+-  [<img src="https://www.gnu.org/graphics/heckert_gnu.transp.small.png" alt=" [A GNU head] " style="height:1em;" /> GNU Make](https://www.gnu.org/software/make/) for firmware/code elaboration and HW simulation.
+-  <img src="https://static-cdn.osdn.net/thumb/g/4/899/36x36_0.png" alt="TeraTerm" style="height:1em;" /> [TeraTerm](https://ttssh2.osdn.jp/index.html.en) or any other serial terminal.
 
-## Creating the project
+## The project
 
 ### VexRiscv
 
@@ -182,7 +185,57 @@ Selecting the template:
 
 ### IO Peripherals
 
-#### IO Registers bank
+IO peripherals are handled by an `IO Registers bank`.
+
+| #    | Register        | Remarks                                                      | Bits                                                         |
+| ---- | --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 0    | DEBUG_REG       | General purpose register for debugging (not connected to any IO port) | [31:0]                                                       |
+| 1    | UART0_TX_REG    | UART0 transmission register                                  | [31]: Set to one to initiate the transmission, clear to zero when by HW indicating UART ready for next byte<br />[7:0]: Byte to be transmitted |
+| 2    | UART0_RX_REG    | UART0 reception register                                     | [31]: Poll bit indicating new byte available, clear to zero by HW after a read<br />[7:0]: Byte to be transmitted |
+| 3    | LEDS_REG        | LEDs                                                         | [3:0] ↦LD[5:2]                                               |
+| 4    | RGB0_REG        | RGB0 LEDs                                                    | [2:0] ↦ blue, green, red                                     |
+| 5    | RGB0_DCYCLE_REG | RGB PWM duty cycle [0, 20000]                                | RGBs are handled by a 20KHz PWM                              |
+| 6    | RGB1_REG        | RGB0 LEDs                                                    | [2:0] ↦ blue, green, red                                     |
+| 7    | RGB1_DCYCLE_REG | RGB PWM duty cycle [0, 20000]                                | RGBs are handled by a 20KHz PWM                              |
+| 8    | BUTTONS_REG     | Push buttons                                                 | [3:0]  ↦ BTN[3:0]                                            |
+| 9    | SWITCHES_REG    | DIP switch                                                   | [3:0]  ↦ SW[3:0]                                             |
+
+From the FW, the IO registers are accessed with:
+
+```c++
+// ----------------------------------------------------
+// Registers declarations are handled in the file include/memory_map.h
+// ----------------------------------------------------
+// Example register declaration
+uint32_t constexpr GPIO_BASE_ADDR = 0x80000000u;
+uint32_t* const DEBUG_REG         = (uint32_t*)(0 * 0x04 + GPIO_BASE_ADDR);
+
+// Macros declaration
+#define READ_IO(REG_ID) (*REG_ID)
+#define WRITE_IO(REG_ID, VL) (*REG_ID) = VL
+
+// RD/WR access
+WRITE_IO(DEBUG_REG, u32_var);
+uint32_t var = READ_IO(DEBUG_REG);
+```
+
+> 📝 IO peripherals can be added/removed as required, that's the beauty of FPGAs and Soft processors.
+
+### Other blocks
+
+- PWM: a simple PWM RTL block was implemented
+- UART: a simple UART RTL block was implemented
+
+
+
+## Simulation
+
+The simulation of the project is handled by make.
+
+- Firmware: 
+- RTL:
+
+## Implementation
 
 ### Resource utilization
 
@@ -204,5 +257,3 @@ A full utilization report can be found in [Base Architecture Utilization Report]
 <p align = "center">
 <i>Base Architecture Implementation Report (Vivado)</i>
 </p>
-## References
-

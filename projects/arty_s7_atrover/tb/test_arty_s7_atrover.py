@@ -9,7 +9,7 @@
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import Timer, RisingEdge
+from cocotb.triggers import Timer, RisingEdge, ClockCycles
 
 CLK_FREQ = 100e6
 
@@ -19,7 +19,7 @@ async def init(dut, clk_period, units):
   
   dut.sw.value      = 0
   dut.btn.value     = 0
-  dut.uart_rx.value = 0
+  dut.uart_rx.value = 1
   
   cocotb.start_soon(Clock(signal=dut.clk, period=clk_period, units="ns").start())
   
@@ -42,6 +42,13 @@ async def io_test_arty_s7_atrover(dut):
   await reset(dut)
   await Timer(1, units='us')
   
+  # Wait Hellor World msg
+  msg_len = 27
+  sim_byte_tx_tm = 8700
+  uart_tx_wait_time = 1 + (msg_len * sim_byte_tx_tm) / 1000
+  await Timer(uart_tx_wait_time, units='us')
+  
+  # Toggle some inputs
   dut._log.info("Set btn=0x02")
   dut.btn.value = 0x2
   await Timer(1, units='us')
@@ -66,6 +73,15 @@ async def io_test_arty_s7_atrover(dut):
   dut.sw.value = 0x2
   await Timer(1, units='us')
   
+  # UART RX
+  clks_per_bit = 90
+  ch = [1, 0,1,0,1,1,0,1,0, 0] # Z, [STOP, 0x5A, START]
+  ch.reverse()
+  for bit_pos in range(0, len(ch)):
+   dut.uart_rx.value = ch[bit_pos]
+   await ClockCycles(dut.clk, clks_per_bit, rising=True)
+  
+  # EOS
   dut._log.info("EOS (10us)")
   await Timer(10, units='us')
   dut._log.info("Done...")

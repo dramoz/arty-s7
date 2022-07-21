@@ -41,11 +41,25 @@ This is an ongoing project, and there are several features coming later. Among t
     - add FPU (floating point unit)
   - Hardware
     - Add battery sensors
-    - Check other DC motor drivers options
+    - Check other DC motor drivers' options
 - Tools
   - Better integration of verification tools: currently the verification process is a two-step, involving compiling the firmware (FW) and then running the simulation. Both should be integrated into a single `Makefile `that check for FW changes and compile as required.
   - Check the Vivado IP Integrator flow: I decided not to follow the usual IP integrator flow as I wanted to keep things as simple as possible given the allocated time for this project and the short deadline (~8 weeks when you only have nights and a couple of hours on weekends is not that much)
 
-
+Finally, a multi-core with FreeRTOS VexRiscv implementation could be in the planning.
 
 ## Final Remarks
+
+This was an interesting journey. As my work mostly goes around HDL Verification, I usually have little time to explore HDL and RTL coding. The experience was fruitful - I remembered and learned a lot during the process and it was interesting to see how much FPGAs have grown over the decades - especially in the low-cost devices. Having free tools is a plus, relatively cheap FPGA boards like the Arty-S7 are great not only for hobbyists but for any competent project.
+
+I would like to thank [<img src="https://community.element14.com/e14/cfs/e14core/images/logos/e14_Profile_206px.png" alt="element14 Community" style="height:2em;" />](https://community.element14.com/), [<img src="https://cdn11.bigcommerce.com/s-7gavg/images/stencil/original/digilent-logo_ni_2021-260px_1_1627086513__23106.original.png" alt="Digilent" style="height:1em;" />](https://digilent.com/) and  [<img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="img" style="height:1em;" />](https://www.amd.com/)|[<img src="https://www.xilinx.com/etc.clientlibs/site/clientlibs/xilinx/site-all/resources/imgs/products/xilinx-logo-product.png" alt="img" style="height:1em;" />](https://www.xilinx.com) for making these projects a possibility.
+
+I would also like to thank the Open Community  [<img src="https://riscv.org/wp-content/uploads/2020/06/riscv-color.svg" alt="RISC-V International" style="height:1em;" />](https://riscv.org/)| [<img src="https://community.cadence.com/cfs-file/__key/communityserver-blogs-components-weblogfiles/00-00-00-01-06/sifive_2D00_logo_2D00_v1.png" alt="img" style="height:1em;" />](https://www.sifive.com/), [<img src="https://www.veripool.org/img/verilator_256_200_min.png" alt="Logo" style="height:2em;" />](https://veripool.org/guide/latest/index.html) and [<img src="https://raw.githubusercontent.com/cocotb/cocotb-web/master/assets/img/cocotb-logo.svg" alt="CoCoTB" style="height:1em;" />](https://docs.cocotb.org/en/stable/). It would have not be possible to do any of this without the many hours spend on coding and debugging the tools.
+
+------
+
+ [<img src="https://github.githubassets.com/images/modules/logos_page/Octocat.png" alt="GitHub Octocat" style="height:2em;" /><img src="https://avatars.githubusercontent.com/u/34524370?v=4" alt="img" style="height:1em;" />dramoz](https://github.com/dramoz/arty-s7)
+
+------
+
+© Danilo Ramos, 2022
