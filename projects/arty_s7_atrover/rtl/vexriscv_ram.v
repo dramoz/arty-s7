@@ -26,16 +26,13 @@ module vexriscv_ram #(
   output wire [(NB_COL*COL_WIDTH)-1:0]  dbus_dout   // Port B RAM output data
 );
   
-  reg [(NB_COL*COL_WIDTH)-1:0] vexriscv_mem[RAM_DEPTH];
+  reg [(NB_COL*COL_WIDTH)-1:0] vexriscv_mem[RAM_DEPTH-1:0];
   reg [(NB_COL*COL_WIDTH)-1:0] ibus_ram_data = {(NB_COL*COL_WIDTH){1'b0}};
   reg [(NB_COL*COL_WIDTH)-1:0] dbus_ram_data = {(NB_COL*COL_WIDTH){1'b0}};
   
   // The following code either initializes the memory values to a specified file or to all zeros to match hardware
   generate
     if (INIT_FILE != "") begin: use_init_file
-      integer inx;
-      integer jnx;
-      bit [NB_COL*COL_WIDTH-1:0] swap;
       initial begin
         $readmemh(INIT_FILE, vexriscv_mem);
       end
