@@ -287,7 +287,7 @@ module arty_s7_atrover #(
           // HW op. when reading back registers
           case({ {(RISCV_WL-IO_SPACE_ADDR_WL){1'b0}}, io_addr})
             UART0_RX_REG: begin
-              io_regs[io_addr][31] = 1'b0;
+              io_regs[io_addr][31] <= 1'b0;
             end
           endcase
         end
@@ -322,7 +322,6 @@ module arty_s7_atrover #(
   // RX port
   logic       uart0_rx_valid;
   logic [7:0] uart0_rx_data;
-  logic [7:0] uart0_rx_data_d;
   logic       uart0_rx_uart;
   
   uart_lite #(
@@ -363,7 +362,7 @@ module arty_s7_atrover #(
       if(uart0_tx_rdy && io_regs[UART0_TX_REG][RISCV_WL-1]) begin
         uart0_tx_vld <= 1'b1;
         uart0_tx_data <= io_regs[UART0_TX_REG][7:0];
-        io_regs[UART0_TX_REG][RISCV_WL-1] = 0;
+        io_regs[UART0_TX_REG][RISCV_WL-1] <= 0;
         
       end else begin
         uart0_tx_vld <= 1'b0;
@@ -380,7 +379,6 @@ module arty_s7_atrover #(
   assign timerInterrupt    = 1'b0;
   assign externalInterrupt = 1'b0; // |btn_dbncd;
   assign softwareInterrupt = 1'b0;
-  
   // --------------------------------------------------
   VexRiscvBase VexRiscvBase_inst (
     .clk                      (clk),

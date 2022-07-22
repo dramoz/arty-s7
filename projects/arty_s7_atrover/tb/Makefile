@@ -76,7 +76,7 @@ ifeq ($(SIM), verilator)
   $(info CoCoTB + Verilator)
   COMPILE_ARGS += -I../rtl
   # Supress common anoying verilator warnings (unnecessary here for sim, not linting)
-  EXTRA_ARGS += -Wno-fatal 
+  EXTRA_ARGS += -Wno-fatal -Wall
   # -Wno-UNOPT -Wno-UNOPTFLAT -Wno-UNUSED -Wno-WIDTH
   EXTRA_ARGS += --assert
   # --------------------------------------

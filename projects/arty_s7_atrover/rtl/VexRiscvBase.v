@@ -2,7 +2,10 @@
 // Component : VexRiscvBase
 // Git hash  : 6a47e6f0138506ee9046db18206b3784d1ea203b
 
-//`timescale 1ns/1ps
+/* verilator lint_off DECLFILENAME */
+/* verilator lint_off PINCONNECTEMPTY */
+/* verilator lint_off UNDRIVEN */
+/* verilator lint_off UNUSED */
 
 module VexRiscvBase (
   output              iBus_cmd_valid,

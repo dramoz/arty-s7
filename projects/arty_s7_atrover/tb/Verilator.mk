@@ -156,7 +156,7 @@ options:
 	@echo -e $(VALID_OPTIONS)
 
 lint:
-	$(VERILATOR) --lint-only -f $(RTL_FILES) --top-module $(UUT) -Wno-fatal
+	$(VERILATOR) --lint-only -f $(RTL_FILES) --top-module $(UUT) -Wno-fatal -Wall
 
 debug:
 	@echo "NOT IMPLEMENTED (define DEBUG in .sv/.cpp files)!!!"

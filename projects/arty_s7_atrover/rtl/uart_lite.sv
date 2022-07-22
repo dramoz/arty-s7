@@ -33,7 +33,7 @@ module uart_lite
     // RX port
     output logic                 rx_valid,
     output logic [DATA_BITS-1:0] rx_data,
-    input  logic                 rx_uart
+    input  wire                 rx_uart
 );
 
 localparam rcalc_CLKS_PER_BIT = $rtoi($ceil(CLK_FREQUENCY/BAUD_RATE));
