@@ -254,10 +254,11 @@ The full implementation of the base architecture used:
 A full utilization report can be found in [Base Architecture Utilization Report](assets/base_arch_utilization.txt)
 
 <p align = "center">
-  <img src="assets/base_arch_impl_tbl.png" style="zoom:100%;" title="Vivado Language Templates" />
-  <img src="assets/base_arch_impl_tbl_p.png" style="zoom:100%;" title="Vivado Language Templates" />
+  <img src="assets/base_arch_impl_tbl.png" style="zoom:100%;" title="Implementation Table" />
+  <img src="assets/base_arch_impl_tbl_p.png" style="zoom:100%;" title="Implementation Table" />
   <img src="assets/base_arch_impl_rpt.png" alt="base architecture implementation report" style="zoom:100%;" title="Vivado Language Templates" />
+    <img src="assets/base_arch_impl_floorplan.png" style="zoom:50%;" title="Floorplan" />
 </p>
 <p align = "center">
-<i>Base Architecture Implementation Report (Vivado)</i>
+<i>Base Architecture Implementation Reports & Floorplan (Vivado)</i>
 </p>

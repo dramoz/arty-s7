@@ -16,17 +16,17 @@ All the files are open-source, MIT license and can be downloaded from [<img src=
 - What I learned about VexRiscv
 - What's next?
 
-## Spartan-7
+## Arty S7 - Spartan-7
 
 When I started this journey, my knowledge of the Xilinx Spartan devices was what I got from my University courses, back in the day. I do most of my work at [<img src="https://www.eideticom.com/uploads/images/2019/07/11/eideticom-logo-03.svg" alt="Eideticom" style="height:1em" />]()as an HDL Verification Engineer, with Xilinx and open source tools like CoCoTB/Verilator.
 
-The devices we target are [Ultrascale+ (Virtex/Kintex)](https://www.xilinx.com/products/silicon-devices/fpga/virtex-ultrascale-plus.html), with hundreds of thousands of logic resources - which are not "cheap" (as compared to a [Spartan-7](https://www.xilinx.com/products/silicon-devices/fpga/spartan-7.html), but you can always find something bigger and pricier [VERSAL](https://www.xilinx.com/products/silicon-devices/acap/versal.html)). As for my own projects, I switch between ESP32 boards or the  [ZynQ Ultrascale+](https://www.xilinx.com/products/silicon-devices/soc/zynq-ultrascale-mpsoc.html).
+The devices we target are [Ultrascale+ (Virtex/Kintex)](https://www.xilinx.com/products/silicon-devices/fpga/virtex-ultrascale-plus.html), with hundreds of thousands of logic resources - which are not "cheap" (as compared to a [Spartan-7](https://www.xilinx.com/products/silicon-devices/fpga/spartan-7.html), but you can always find something bigger and pricier [VERSAL](https://www.xilinx.com/products/silicon-devices/acap/versal.html) - hopefully one day I can put my hands on one of this). As for my own projects, I switch between ESP32 boards or the  [ZynQ Ultrascale+](https://www.xilinx.com/products/silicon-devices/soc/zynq-ultrascale-mpsoc.html).
 
-The Spartan-7 was something I did not know I was missing.
-
-I was impressed by the available logic resources.
+The Spartan-7 was something I did not know I was missing. I was impressed by the available logic resources. DSP blocks and plenty of LUTs/FFs to have several RISC-V implementations in one small FPGA.
 
 In terms of tools, Vivado ML is definitely a huge improvement over the old ISE. Things are easier to do and the results are acceptable.
+
+The Arty S7 development board is a great starting point. It comes with a lot of IO ports and the necessary LEDs, and buttons, ... to do some productive work.
 
 ## VexRiscv
 
@@ -39,10 +39,15 @@ In terms of tools, Vivado ML is definitely a huge improvement over the old ISE. 
 This is an ongoing project, and there are several features coming later. Among them, the next ones are:
 
 - Arty-S7-Rover
+  - RTL
+    - Move the whole DC motor control to an RTL IP
+    - Add one PWM for each RGB colour
+    - Add an LCD
   - VexRiscv
     - add JTAG support for debugging and programming
     - add DDR support
     - add FPU (floating point unit)
+    - Connect to WiFi (ESP32)
   - UART: add TX/RX FIFOs
   - Hardware
     - Add battery sensors
