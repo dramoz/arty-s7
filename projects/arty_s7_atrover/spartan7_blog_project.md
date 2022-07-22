@@ -235,7 +235,7 @@ The simulation of the project is handled by make.
 - Firmware: 
 - RTL:
 
-> 👉[<img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Gtkwave_256x256x32.png" alt="File:Gtkwave 256x256x32.png" style="height:2em;" />]()
+> 👉[<img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Gtkwave_256x256x32.png" alt="File:Gtkwave 256x256x32.png" style="height:2em;" />](assets/waves/arty_s7_base.fst)
 
 ## Implementation
 

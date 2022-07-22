@@ -256,7 +256,6 @@ module arty_s7_atrover #(
     SWITCHES_REG         = 9
   } io_registers;
   
-  
   logic                io_wen;
   logic [IO_SPACE_ADDR_WL-1:0] io_addr;
   logic [RISCV_WL-1:0] io_wdata;
@@ -271,6 +270,10 @@ module arty_s7_atrover #(
   
   always_ff @( posedge clk ) begin
     if(sys_reset) begin
+      // UART
+      uart0_tx_vld <= 0;
+      
+      // IO regs
       io_regs <= '{default:0};
       
     end else begin
@@ -278,8 +281,16 @@ module arty_s7_atrover #(
       if(uart0_rx_valid) begin
         io_regs[UART0_RX_REG] <= {1'b1, { (RISCV_WL-1-8){1'b0} }, uart0_rx_data};
       end
+      
       if(uart0_tx_rdy && io_regs[UART0_TX_REG][RISCV_WL-1]) begin
         io_regs[UART0_TX_REG][RISCV_WL-1] <= 0;
+        uart0_tx_vld <= 1'b1;
+        uart0_tx_data <= io_regs[UART0_TX_REG][7:0];
+        io_regs[UART0_TX_REG][RISCV_WL-1] <= 0;
+        
+      end else begin
+          uart0_tx_vld <= 1'b0;
+          
       end
       
       // IO FW access
@@ -356,24 +367,6 @@ module arty_s7_atrover #(
     uart_tx = uart0_tx_uart;
     uart0_rx_uart = uart_rx;
   end: uart0_comb
-  
-  always_ff @( posedge clk ) begin: uart0_proc
-    if(sys_reset) begin
-      uart0_tx_vld <= 0;
-      
-    end else begin
-      // TX
-      if(uart0_tx_rdy && io_regs[UART0_TX_REG][RISCV_WL-1]) begin
-        uart0_tx_vld <= 1'b1;
-        uart0_tx_data <= io_regs[UART0_TX_REG][7:0];
-        io_regs[UART0_TX_REG][RISCV_WL-1] <= 0;
-        
-      end else begin
-        uart0_tx_vld <= 1'b0;
-        
-      end
-    end
-  end: uart0_proc
   
   // ----------------------------------------
   always_comb dBus_rsp_data = (io_slct_d) ? (io_rdata) : (mem_rdata);
