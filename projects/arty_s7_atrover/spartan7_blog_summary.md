@@ -48,7 +48,7 @@ This is an ongoing project, and there are several features coming later. Among t
     - add DDR support
     - add FPU (floating point unit)
     - Connect to WiFi (ESP32)
-  - UART: add TX/RX FIFOs
+  - UART: add TX/RX FIFOs + improve handshaking (e.g. remove TX bit set)
   - Hardware
     - Add battery sensors
     - Check other DC motor drivers' options
