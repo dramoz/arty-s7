@@ -39,7 +39,7 @@ module pwm
       end else begin
           pwm_cnt <= '0;
       end
-      o_pwm <= (pwm_cnt > i_duty_cycle) ? (1'b0) : (1'b1);
+      o_pwm <= (i_duty_cycle <= pwm_cnt) ? (1'b0) : (1'b1);
     end  // rst
   end // pwm_cnt_proc
   

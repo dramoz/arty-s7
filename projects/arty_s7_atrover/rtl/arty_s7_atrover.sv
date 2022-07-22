@@ -53,12 +53,14 @@ module arty_s7_atrover #(
   localparam LONG_PRESS_DURATION_MS = 0;
   localparam RGB_PWM_FREQ  = CLK_FREQ/32;
   localparam UART0_BAUD_RATE = 1152000;
+  localparam MOTOR_PWM_FREQ = CLK_FREQ/100;
   
 `else
   localparam CLICK_DEBOUNCE_MS = 10;
   localparam LONG_PRESS_DURATION_MS = 1000;
   localparam RGB_PWM_FREQ  = 20000;
   localparam UART0_BAUD_RATE = 115200;
+  localparam MOTOR_PWM_FREQ = 500;
   
 `endif
   
@@ -380,7 +382,6 @@ module arty_s7_atrover #(
   
   // ----------------------------------------
   // DC Motors PWM
-  localparam integer PWM_FREQ[3:0]   = {20000, 5000, 500, 150};
 /* verilator lint_off WIDTH */
   logic [3:0] dc_motors_pwm;
   generate
@@ -389,13 +390,13 @@ module arty_s7_atrover #(
       pwm
       #(
         .CLK_FREQ(CLK_FREQ),
-        .PWM_FREQ(PWM_FREQ[inx])
+        .PWM_FREQ(MOTOR_PWM_FREQ)
       )
       pwm_dc_motor
       (
         .clk(clk),
         .reset(sys_reset),
-        .i_duty_cycle(int'(0.5*CLK_FREQ/PWM_FREQ[inx])),
+        .i_duty_cycle(io_regs[M0_FWD_PWM_REG+inx]),
         .o_pwm(dc_motors_pwm[inx])
       );
     end

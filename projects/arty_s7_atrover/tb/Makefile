@@ -18,7 +18,7 @@
 # -----------------------------------------------------------------------
 TOPLEVEL_LANG ?= verilog
 TOPLEVEL ?= arty_s7_atrover
-MODULE ?= test_arty_s7_atrover
+MODULE ?= test_motor_test_arty_s7_atrover
 SIM ?= verilator
 RTL_FILES ?= rtlfiles.lst
 

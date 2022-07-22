@@ -23,10 +23,10 @@ SET_IO_REG( 6, RGB1_REG       );
 SET_IO_REG( 7, RGB1_DCYCLE_REG);
 SET_IO_REG( 8, BUTTONS_REG    );
 SET_IO_REG( 9, SWITCHES_REG   );
-SET_IO_REG(10, M0_FWD_PWM_REG );
-SET_IO_REG(11, M0_BWD_PWM_REG );
-SET_IO_REG(12, M1_FWD_PWM_REG );
-SET_IO_REG(13, M1_BWD_PWM_REG );
+SET_IO_REG(10, M0_BWD_PWM_REG );
+SET_IO_REG(11, M0_FWD_PWM_REG );
+SET_IO_REG(12, M1_BWD_PWM_REG );
+SET_IO_REG(13, M1_FWD_PWM_REG );
 
 // ----------------------------------------------------------------------
 // --- __MEMORY_MAP__ ---
