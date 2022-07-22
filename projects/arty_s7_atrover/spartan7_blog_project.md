@@ -232,6 +232,8 @@ uint32_t var = READ_IO(DEBUG_REG);
 
 The simulation of the project is handled by make.
 
+Speeding up the simulation
+
 - Firmware: 
 - RTL:
 

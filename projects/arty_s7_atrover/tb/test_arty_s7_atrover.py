@@ -81,6 +81,9 @@ async def io_test_arty_s7_atrover(dut):
    dut.uart_rx.value = ch[bit_pos]
    await ClockCycles(dut.clk, clks_per_bit, rising=True)
   
+  dut._log.info("Set btn=0x01")
+  dut.btn.value = 0x1
+  
   # EOS
   dut._log.info("EOS (10us)")
   await Timer(10, units='us')
