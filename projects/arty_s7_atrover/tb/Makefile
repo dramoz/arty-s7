@@ -47,6 +47,15 @@ else
 endif
 
 # -----------------------------------------------------------------------
+# Select wave output format (FST) default, set WAVE_FMT=vcd to select vcd
+WAVE_FMT ?= fst
+ifeq ($(WAVE_FMT), fst)
+  TRACE_ARG = -fst
+else
+  TRACE_ARG = 
+endif
+
+# -----------------------------------------------------------------------
 # Load RTL files
 FILES := $(shell cat $(RTL_FILES))
 VERILOG_SOURCES := $(FILES)
@@ -80,8 +89,8 @@ ifeq ($(SIM), verilator)
   # --------------------------------------
   # wave | coverage
   ifeq ($(WAVES), 1)
-    $(info + wave (fst))
-    EXTRA_ARGS += --trace-fst --trace-structs
+    $(info + wave ($(VCD)))
+    EXTRA_ARGS += --trace$(TRACE_ARG) --trace-structs
   endif
   ifeq ($(COVERAGE), 1)
     $(info + coverage)
@@ -105,7 +114,7 @@ ifeq ($(SIM), icarus)
   # wave
   ifeq ($(WAVES), 1)
     $(info + wave (fst))
-    PLUSARGS += -fst
+    PLUSARGS += -$(WAVE_FMT)
     ICARUS_WAVE = icarus_wave.v
     VERILOG_SOURCES += $(ICARUS_WAVE)
     COMPILE_ARGS += -s icarus_wave
@@ -114,7 +123,7 @@ ifeq ($(SIM), icarus)
     # from CoCoTB
     $(file >  $(ICARUS_WAVE), module icarus_wave();)
     $(file >> $(ICARUS_WAVE), initial begin)
-    $(file >> $(ICARUS_WAVE),     $$dumpfile("wave.fst");)
+    $(file >> $(ICARUS_WAVE),     $$dumpfile("dump.$(WAVE_FMT)");)
     $(file >> $(ICARUS_WAVE),     $$dumpvars(0, $(TOPLEVEL));)
     $(file >> $(ICARUS_WAVE),     #1;)
     $(file >> $(ICARUS_WAVE), end)
@@ -133,4 +142,4 @@ clean::
 	rm -fr __pycache__ sim_build
 	rm -fr `find ../ -name "__pycache__"`
 	rm -rf iverilog_dump.v
-	rm -rf dump.fst $(TOPLEVEL).fst
+	rm -rf dump.$(WAVE_FMT)
