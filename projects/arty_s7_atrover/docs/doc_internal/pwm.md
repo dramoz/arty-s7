@@ -6,11 +6,11 @@
 ![Diagram](pwm.svg "Diagram")
 ## Generics
 
-| Generic name | Type | Value                     | Description |
-| ------------ | ---- | ------------------------- | ----------- |
-| CLK_FREQ     |      | 100000000                 |             |
-| PWM_FREQ     |      | 20000                     |             |
-| WL           |      | $clog2(CLK_FREQ/PWM_FREQ) |             |
+| Generic name | Type | Value                       | Description |
+| ------------ | ---- | --------------------------- | ----------- |
+| CLK_FREQ     |      | 100000000                   |             |
+| PWM_FREQ     |      | 20000                       |             |
+| WL           |      | $clog2(CLK_FREQ/PWM_FREQ+1) |             |
 ## Ports
 
 | Port name    | Direction | Type           | Description |
@@ -26,9 +26,9 @@
 | pwm_cnt | logic [WL-1:0] |             |
 ## Constants
 
-| Name        | Type | Value     | Description |
-| ----------- | ---- | --------- | ----------- |
-| PWM_MAX_CNT |      | undefined |             |
+| Name        | Type     | Value     | Description |
+| ----------- | -------- | --------- | ----------- |
+| PWM_MAX_CNT | unsigned | undefined |             |
 ## Processes
 - pwm_cnt_proc: ( @( posedge clk ) )
   - **Type:** always_ff
