@@ -158,4 +158,8 @@ int main(void) {
 
 ## Arty-S7
 
+### DC Motor PWM
+
+
+
 ### Reading multiple sensors

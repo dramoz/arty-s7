@@ -29,6 +29,12 @@ module arty_s7_atrover #(
   output logic [2:0] rgb0,
   output logic [2:0] rgb1,
   
+  // DC Motors PWM
+  output logic m0_fwd_pwm,
+  output logic m0_bwd_pwm,
+  output logic m1_fwd_pwm,
+  output logic m1_bwd_pwm,
+  
   // Peripherals
   input  wire  uart_rx,
   output logic uart_tx
@@ -244,16 +250,20 @@ module arty_s7_atrover #(
   localparam IO_SPACE_ADDR_WL = $clog2(IO_REG_SPACE-1);
   
   typedef enum  {
-    DEBUG_REG            = 0,
-    UART0_TX_REG         = 1,
-    UART0_RX_REG         = 2,
-    LEDS_REG             = 3,
-    RGB0_REG             = 4,
-    RGB0_DCYCLE_REG      = 5,
-    RGB1_REG             = 6,
-    RGB1_DCYCLE_REG      = 7,
-    BUTTONS_REG          = 8,
-    SWITCHES_REG         = 9
+    DEBUG_REG           =  0,
+    UART0_TX_REG        =  1,
+    UART0_RX_REG        =  2,
+    LEDS_REG            =  3,
+    RGB0_REG            =  4,
+    RGB0_DCYCLE_REG     =  5,
+    RGB1_REG            =  6,
+    RGB1_DCYCLE_REG     =  7,
+    BUTTONS_REG         =  8,
+    SWITCHES_REG        =  9,
+    M0_FWD_PWM_REG      = 10,
+    M0_BWD_PWM_REG      = 11,
+    M1_FWD_PWM_REG      = 12,
+    M1_BWD_PWM_REG      = 13
   } io_registers;
   
   logic                io_wen;
@@ -367,6 +377,37 @@ module arty_s7_atrover #(
     uart_tx = uart0_tx_uart;
     uart0_rx_uart = uart_rx;
   end: uart0_comb
+  
+  // ----------------------------------------
+  // DC Motors PWM
+  localparam integer PWM_FREQ[3:0]   = {20000, 5000, 500, 150};
+/* verilator lint_off WIDTH */
+  logic [3:0] dc_motors_pwm;
+  generate
+    genvar inx;
+    for(inx=0; inx < 4; inx = inx + 1) begin: dc_motors_pwm_gen
+      pwm
+      #(
+        .CLK_FREQ(CLK_FREQ),
+        .PWM_FREQ(PWM_FREQ[inx])
+      )
+      pwm_dc_motor
+      (
+        .clk(clk),
+        .reset(sys_reset),
+        .i_duty_cycle(int'(0.5*CLK_FREQ/PWM_FREQ[inx])),
+        .o_pwm(dc_motors_pwm[inx])
+      );
+    end
+  endgenerate
+/* verilator lint_on WIDTH */
+  
+  always_comb begin: dc_motors_pwm_comb
+    m0_fwd_pwm = dc_motors_pwm[0];
+    m0_bwd_pwm = dc_motors_pwm[1];
+    m1_fwd_pwm = dc_motors_pwm[2];
+    m1_bwd_pwm = dc_motors_pwm[3];
+  end
   
   // ----------------------------------------
   always_comb dBus_rsp_data = (io_slct_d) ? (io_rdata) : (mem_rdata);

@@ -1,16 +1,18 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Fri Jul 22 02:15:27 2022
+[*] Fri Jul 22 04:50:51 2022
 [*]
 [dumpfile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/dump.fst"
-[dumpfile_mtime] "Fri Jul 22 02:12:56 2022"
-[dumpfile_size] 247181
+[dumpfile_mtime] "Fri Jul 22 04:49:54 2022"
+[dumpfile_size] 579581
 [savefile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/arty_s7_atrover.gtkw"
-[timestart] 237000000
+[timestart] 0
 [size] 2560 1370
 [pos] -1 -1
-*-21.453640 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-24.854795 19200000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] arty_s7_atrover.
+[treeopen] arty_s7_atrover.dc_motors_pwm_gen[0].
+[treeopen] arty_s7_atrover.dc_motors_pwm_gen[3].
 [sst_width] 379
 [signals_width] 404
 [sst_expanded] 1
@@ -25,14 +27,14 @@ arty_s7_atrover.sys_reset
 @22
 [color] 5
 arty_s7_atrover.btn[3:0]
-@800022
+@c00022
 arty_s7_atrover.leds[3:0]
 @28
 (0)arty_s7_atrover.leds[3:0]
 (1)arty_s7_atrover.leds[3:0]
 (2)arty_s7_atrover.leds[3:0]
 (3)arty_s7_atrover.leds[3:0]
-@1001200
+@1401200
 -group_end
 @28
 arty_s7_atrover.rgb0[2:0]
@@ -43,6 +45,10 @@ arty_s7_atrover.sw[3:0]
 @28
 arty_s7_atrover.uart_rx
 arty_s7_atrover.uart_tx
+arty_s7_atrover.m0_fwd_pwm
+arty_s7_atrover.m0_bwd_pwm
+arty_s7_atrover.m1_fwd_pwm
+arty_s7_atrover.m1_bwd_pwm
 @1000200
 -IO
 @200
@@ -62,26 +68,26 @@ arty_s7_atrover.iBus_rsp_valid
 arty_s7_atrover.iBus_rsp_payload_inst[31:0]
 @1000200
 -iBus
-@800201
+@c00200
 -dBus
-@29
+@28
 arty_s7_atrover.sys_reset
 arty_s7_atrover.clk
 arty_s7_atrover.dBus_cmd_valid
-@23
+@22
 arty_s7_atrover.dBus_cmd_payload_address[31:0]
-@29
+@28
 arty_s7_atrover.dBus_cmd_payload_wr
 arty_s7_atrover.dBus_cmd_payload_size[1:0]
-@23
+@22
 arty_s7_atrover.dBus_cmd_payload_data[31:0]
-@29
+@28
 [color] 2
 arty_s7_atrover.dBus_rsp_ready
 arty_s7_atrover.dBus_rsp_error
-@23
+@22
 arty_s7_atrover.dBus_rsp_data[31:0]
-@1000201
+@1401200
 -dBus
 @200
 ---------------------
@@ -133,8 +139,11 @@ arty_s7_atrover.io_wen
 @24
 arty_s7_atrover.io_addr[3:0]
 @22
-arty_s7_atrover.io_rdata[31:0]
 arty_s7_atrover.io_wdata[31:0]
+arty_s7_atrover.io_rdata[31:0]
+@28
+[color] 2
+arty_s7_atrover.dBus_rsp_ready
 @c00200
 -io_regs
 @24
@@ -214,7 +223,7 @@ arty_s7_atrover.rgb1_dcycle[31:0]
 arty_s7_atrover.rgb1_pwm
 @1401200
 -rgb-pwm
-@800200
+@c00200
 -uart
 @420
 arty_s7_atrover.uart0_inst.BAUD_RATE
@@ -252,6 +261,25 @@ arty_s7_atrover.uart0_inst.rx_valid
 arty_s7_atrover.uart0_inst.rx_data[7:0]
 @1000200
 -UART_RX
+@1401200
 -uart
+@200
+---------------------
+@c00200
+-m3_pwm_params
+@420
+arty_s7_atrover.dc_motors_pwm_gen[3].pwm_dc_motor.CLK_FREQ
+arty_s7_atrover.dc_motors_pwm_gen[3].pwm_dc_motor.WL
+@22
+arty_s7_atrover.dc_motors_pwm_gen[3].pwm_dc_motor.i_duty_cycle[12:0]
+arty_s7_atrover.dc_motors_pwm_gen[3].pwm_dc_motor.PWM_FREQ
+@420
+arty_s7_atrover.dc_motors_pwm_gen[3].pwm_dc_motor.PWM_MAX_CNT
+@28
+arty_s7_atrover.dc_motors_pwm_gen[3].pwm_dc_motor.o_pwm
+@1401200
+-m3_pwm_params
+@200
+---------------------
 [pattern_trace] 1
 [pattern_trace] 0
