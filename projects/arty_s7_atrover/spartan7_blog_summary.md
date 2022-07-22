@@ -39,6 +39,7 @@ This is an ongoing project, and there are several features coming later. Among t
     - add JTAG support for debugging and programming
     - add DDR support
     - add FPU (floating point unit)
+  - UART: add TX/RX FIFOs
   - Hardware
     - Add battery sensors
     - Check other DC motor drivers' options

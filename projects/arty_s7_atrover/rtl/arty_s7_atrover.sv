@@ -274,6 +274,15 @@ module arty_s7_atrover #(
       io_regs <= '{default:0};
       
     end else begin
+      // UART regs.
+      if(uart0_rx_valid) begin
+        io_regs[UART0_RX_REG] <= {1'b1, { (RISCV_WL-1-8){1'b0} }, uart0_rx_data};
+      end
+      if(uart0_tx_rdy && io_regs[UART0_TX_REG][RISCV_WL-1]) begin
+        io_regs[UART0_TX_REG][RISCV_WL-1] <= 0;
+      end
+      
+      // IO FW access
       if(dBus_cmd_valid && io_slct) begin
         io_rdata <= (io_wen) ? (io_wdata) : (io_regs[io_addr]);
         
@@ -287,7 +296,7 @@ module arty_s7_atrover #(
           // HW op. when reading back registers
           case({ {(RISCV_WL-IO_SPACE_ADDR_WL){1'b0}}, io_addr})
             UART0_RX_REG: begin
-              io_regs[io_addr][31] <= 1'b0;
+              io_regs[UART0_RX_REG][31] <= 1'b0;
             end
           endcase
         end
@@ -353,11 +362,6 @@ module arty_s7_atrover #(
       uart0_tx_vld <= 0;
       
     end else begin
-      // RX
-      if(uart0_rx_valid) begin
-        io_regs[UART0_RX_REG] <= {1'b1, { (RISCV_WL-1-8){1'b0} }, uart0_rx_data};
-      end
-      
       // TX
       if(uart0_tx_rdy && io_regs[UART0_TX_REG][RISCV_WL-1]) begin
         uart0_tx_vld <= 1'b1;
