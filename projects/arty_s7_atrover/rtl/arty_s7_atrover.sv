@@ -35,7 +35,11 @@ module arty_s7_atrover #(
   output logic m1_fwd_pwm,
   output logic m1_bwd_pwm,
   
-  // Peripherals
+  // Distance Sensor(s)
+  output logic fnt_dst_sens_trigger,
+  input  wire  fnt_dst_sens_edge,
+  
+  // UART
   input  wire  uart_rx,
   output logic uart_tx
 );
@@ -49,18 +53,34 @@ module arty_s7_atrover #(
   initial begin
     $display("Setting SIM parameters...");
   end
-  localparam CLICK_DEBOUNCE_MS = 0;
+  // Debouncers
+  localparam CLICK_DEBOUNCE_MS      = 0;
   localparam LONG_PRESS_DURATION_MS = 0;
-  localparam RGB_PWM_FREQ  = CLK_FREQ/32;
+  
+  // Periph.
+  localparam RGB_PWM_FREQ    = CLK_FREQ/32;
   localparam UART0_BAUD_RATE = 1152000;
-  localparam MOTOR_PWM_FREQ = CLK_FREQ/100;
+  localparam MOTOR_PWM_FREQ  = CLK_FREQ/100;
+  
+  // Distance measurement
+  localparam DISTANCE_SENSOR_PING_FREQ        = CLK_FREQ/100;
+  localparam DISTANCE_SENSOR_TRIG_DURATION_US = 1;
+  localparam DISTANCE_SENSOR_MAX_DISTANCE_M  = 4;
   
 `else
-  localparam CLICK_DEBOUNCE_MS = 10;
+  // Debouncers
+  localparam CLICK_DEBOUNCE_MS      = 10;
   localparam LONG_PRESS_DURATION_MS = 1000;
-  localparam RGB_PWM_FREQ  = 20000;
+  
+  // Periph.
+  localparam RGB_PWM_FREQ    = 20000;
   localparam UART0_BAUD_RATE = 115200;
-  localparam MOTOR_PWM_FREQ = 500;
+  localparam MOTOR_PWM_FREQ  = 500;
+  
+  // Distance measurement
+  localparam DISTANCE_SENSOR_PING_FREQ        = 100;
+  localparam DISTANCE_SENSOR_TRIG_DURATION_US = 10;
+  localparam DISTANCE_SENSOR_MAX_DISTANCE_M  = 4;
   
 `endif
   
@@ -281,7 +301,7 @@ module arty_s7_atrover #(
     io_wdata = dBus_cmd_payload_data;
   end
   
-  always_ff @( posedge clk ) begin
+  always_ff @( posedge clk ) begin: io_regs_update_proc
     if(sys_reset) begin
       // UART
       uart0_tx_vld <= 0;
@@ -330,7 +350,7 @@ module arty_s7_atrover #(
         end
       end
     end
-  end
+  end: io_regs_update_proc
   
   // ----------------------------------------
   // LEDs
@@ -414,6 +434,26 @@ module arty_s7_atrover #(
     m1_fwd_pwm = dc_motors_pwm[2];
     m1_bwd_pwm = dc_motors_pwm[3];
   end
+  
+  // ----------------------------------------
+  // Distance Sensor Trigger
+  localparam DISTANCE_WL = $clog2(100*DISTANCE_SENSOR_MAX_DISTANCE_M + 1);
+  logic [DISTANCE_WL-1:0] fnt_distance_cm;
+  hc_sr04_distance_sensor
+  #(
+    .CLK_FREQ(CLK_FREQ),
+    .PING_FREQ(DISTANCE_SENSOR_PING_FREQ),
+    .TRIG_DURATION_US(DISTANCE_SENSOR_TRIG_DURATION_US),
+    .MAX_DISTANCE_M(DISTANCE_SENSOR_MAX_DISTANCE_M),
+  )
+  hc_sr04_distance_sensor_inst
+  (
+    .reset(sys_reset),
+    .clk(clk),
+    .sn_trigger(fnt_dst_sens_trigger),
+    .sn_edge(fnt_dst_sens_edge),
+    .distance_cm(fnt_distance_cm)
+  );
   
   // ----------------------------------------
   always_comb dBus_rsp_data = (io_slct_d) ? (io_rdata) : (mem_rdata);
