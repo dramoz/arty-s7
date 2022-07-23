@@ -49,8 +49,6 @@ module arty_s7_atrover #(
   
   // ------------------------------------------------------------
   // IO parameters
-`define DO_FULL 1
-
 `ifdef COCOTB_SIM
   initial begin
     $display("Setting SIM parameters...");
@@ -59,28 +57,15 @@ module arty_s7_atrover #(
   localparam CLICK_DEBOUNCE_MS      = 0;
   localparam LONG_PRESS_DURATION_MS = 0;
   
-  `ifndef DO_FULL
-    // Periph.
-    localparam RGB_PWM_FREQ    = CLK_FREQ/32;
-    localparam UART0_BAUD_RATE = 1152000;
-    localparam MOTOR_PWM_FREQ  = CLK_FREQ/100;
-    
-    // Distance measurement
-    localparam DISTANCE_SENSOR_PING_FREQ        = CLK_FREQ/100;
-    localparam DISTANCE_SENSOR_TRIG_DURATION_US = 1;
-    localparam DISTANCE_SENSOR_MAX_DISTANCE_M  = 4;
-  `else
-    // Periph.
-    localparam RGB_PWM_FREQ    = 20000;
-    localparam UART0_BAUD_RATE = 115200;
-    localparam MOTOR_PWM_FREQ  = 500;
-    
-    // Distance measurement
-    localparam DISTANCE_SENSOR_PING_FREQ        = 100;
-    localparam DISTANCE_SENSOR_TRIG_DURATION_US = 10;
-    localparam DISTANCE_SENSOR_MAX_DISTANCE_M  = 4;
-    
-  `endif
+  // Periph.
+  localparam RGB_PWM_FREQ    = CLK_FREQ/32;
+  localparam UART0_BAUD_RATE = 1152000;
+  localparam MOTOR_PWM_FREQ  = CLK_FREQ/100;
+  
+  // Distance measurement
+  localparam DISTANCE_SENSOR_PING_FREQ        = 10000;
+  localparam DISTANCE_SENSOR_TRIG_DURATION_US = 1;
+  localparam DISTANCE_SENSOR_MAX_DISTANCE_M  = 4;
   
 `else
   // Debouncers

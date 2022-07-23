@@ -142,4 +142,4 @@ clean::
 	rm -fr __pycache__ sim_build
 	rm -fr `find ../ -name "__pycache__"`
 	rm -rf iverilog_dump.v
-	rm -rf dump.$(WAVE_FMT)
+	rm -rf dump.$(WAVE_FMT)*

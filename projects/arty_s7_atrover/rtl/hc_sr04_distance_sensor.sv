@@ -51,8 +51,8 @@ module hc_sr04_distance_sensor
   localparam SOUND_SPEED_M_S = 340;
   
   localparam PING_CNT    = int'(CLK_FREQ/PING_FREQ);
-  localparam PING_CNT_WL = $clog2(PING_CNT+1);
   localparam TRIG_CNT = int'((TRIG_DURATION_US*CLK_FREQ)/1e6);
+  localparam PING_CNT_WL = $clog2(PING_CNT+TRIG_CNT+1);
   
   logic [PING_CNT_WL-1:0] ping_trigg_cnt;
   always_ff @( posedge clk ) begin: distance_sensor_trigger_proc
