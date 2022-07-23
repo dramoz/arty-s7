@@ -290,6 +290,10 @@ module arty_s7_atrover #(
       io_regs <= '{default:0};
       
     end else begin
+      // Capture input states
+      io_regs[BUTTONS_REG]  <= {28'd0, btn_dbncd};
+      io_regs[SWITCHES_REG] <= {28'd0, sw};
+      
       // UART regs.
       if(uart0_rx_valid) begin
         io_regs[UART0_RX_REG] <= {1'b1, { (RISCV_WL-1-8){1'b0} }, uart0_rx_data};
@@ -306,6 +310,8 @@ module arty_s7_atrover #(
           
       end
       
+      // Distance sensor
+      
       // IO FW access
       if(dBus_cmd_valid && io_slct) begin
         io_rdata <= (io_wen) ? (io_wdata) : (io_regs[io_addr]);
@@ -314,13 +320,11 @@ module arty_s7_atrover #(
           io_regs[io_addr] <= io_wdata;
           
         end else begin: io_regs_vl_read_update
-          io_regs[BUTTONS_REG]  <= {28'd0, btn_dbncd};
-          io_regs[SWITCHES_REG] <= {28'd0, sw};
           
           // HW op. when reading back registers
           case({ {(RISCV_WL-IO_SPACE_ADDR_WL){1'b0}}, io_addr})
-            UART0_RX_REG: begin
-              io_regs[UART0_RX_REG][31] <= 1'b0;
+            UART0_RX_REG, DISTANCE_REG: begin
+              io_regs[io_addr][31] <= 1'b0;
             end
           endcase
         end
