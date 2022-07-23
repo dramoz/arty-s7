@@ -18,9 +18,9 @@ const uint32_t RGB_DCYLE  = uint32_t(0.01 * CLK_FREQ/RGB_PWM_FREQ);
 
 const uint32_t MOTOR_PWM_FREQ   = 500;
 const uint32_t MOTOR_FULL_STOP  = 0;
-const uint32_t MOTOR_SLOW_SPEED = uint32_t(0.3 * CLK_FREQ/MOTOR_PWM_FREQ);
-const uint32_t MOTOR_MEDIUM_SPEED = uint32_t(0.5 * CLK_FREQ/MOTOR_PWM_FREQ);
-const uint32_t MOTOR_HIGH_SPEED = uint32_t(0.8 * CLK_FREQ/MOTOR_PWM_FREQ);
+const uint32_t MOTOR_SLOW_SPEED = uint32_t(0.1 * CLK_FREQ/MOTOR_PWM_FREQ);
+const uint32_t MOTOR_HIGH_SPEED = uint32_t(0.5 * CLK_FREQ/MOTOR_PWM_FREQ);
+const uint32_t MOTOR_SPEED_STEP = uint32_t(0.4/16 * CLK_FREQ/MOTOR_PWM_FREQ);
 
 const uint32_t UART_MASK    = 0x80000000;
 
@@ -75,13 +75,13 @@ int main(void) {
     // DC motors
     // Select speed from SW
     if(sw==0) {
-      motor_curr_speed = MOTOR_SLOW_SPEED;
+      motor_curr_speed = MOTOR_FULL_STOP;
     }
-    else if(sw==0xf){
+    else if(sw==0xff) {
       motor_curr_speed = MOTOR_HIGH_SPEED;
     }
     else {
-      motor_curr_speed = MOTOR_MEDIUM_SPEED;
+      motor_curr_speed = MOTOR_SPEED_STEP * sw + MOTOR_SLOW_SPEED;
     }
     
     // Select direction from button
