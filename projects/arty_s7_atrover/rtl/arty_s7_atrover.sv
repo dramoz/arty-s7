@@ -265,7 +265,8 @@ module arty_s7_atrover #(
     M0_FWD_PWM_REG      = 10,
     M0_BWD_PWM_REG      = 11,
     M1_FWD_PWM_REG      = 12,
-    M1_BWD_PWM_REG      = 13
+    M1_BWD_PWM_REG      = 13,
+    DISTANCE_REG        = 14
   } io_registers;
   
   logic                io_wen;
