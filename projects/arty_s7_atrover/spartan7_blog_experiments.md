@@ -158,7 +158,9 @@ int main(void) {
 
 ## Arty-S7
 
-### DC Motor PWM
+### The right PWM frequency
+
+Finding the right Geared Motor DC PMW frequency and duty cycle
 
 
 

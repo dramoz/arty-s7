@@ -14,17 +14,21 @@
 | RISCV_TEXT      |      | "../vexriscv_generator/VexRiscvBase/build/main.mem" |             |
 ## Ports
 
-| Port name | Direction | Type        | Description |
-| --------- | --------- | ----------- | ----------- |
-| resetn    | input     | wire        |             |
-| clk       | input     | wire        |             |
-| sw        | input     | wire  [3:0] |             |
-| btn       | input     | wire  [3:0] |             |
-| leds      | output    | [3:0]       |             |
-| rgb0      | output    | [2:0]       |             |
-| rgb1      | output    | [2:0]       |             |
-| uart_rx   | input     | wire        |             |
-| uart_tx   | output    |             |             |
+| Port name  | Direction | Type        | Description |
+| ---------- | --------- | ----------- | ----------- |
+| resetn     | input     | wire        |             |
+| clk        | input     | wire        |             |
+| sw         | input     | wire  [3:0] |             |
+| btn        | input     | wire  [3:0] |             |
+| leds       | output    | [3:0]       |             |
+| rgb0       | output    | [2:0]       |             |
+| rgb1       | output    | [2:0]       |             |
+| m0_fwd_pwm | output    |             |             |
+| m0_bwd_pwm | output    |             |             |
+| m1_fwd_pwm | output    |             |             |
+| m1_bwd_pwm | output    |             |             |
+| uart_rx    | input     | wire        |             |
+| uart_tx    | output    |             |             |
 ## Signals
 
 | Name                     | Type                          | Description |
@@ -74,8 +78,8 @@
 | uart0_tx_uart            | logic                         |             |
 | uart0_rx_valid           | logic                         |             |
 | uart0_rx_data            | logic [7:0]                   |             |
-| uart0_rx_data_d          | logic [7:0]                   |             |
 | uart0_rx_uart            | logic                         |             |
+| dc_motors_pwm            | logic [3:0]                   |             |
 ## Constants
 
 | Name                   | Type | Value                           | Description |
@@ -86,19 +90,21 @@
 | LONG_PRESS_DURATION_MS |      | 0                               |             |
 | RGB_PWM_FREQ           |      | CLK_FREQ/32                     |             |
 | UART0_BAUD_RATE        |      | 1152000                         |             |
+| MOTOR_PWM_FREQ         |      | CLK_FREQ/100                    |             |
 | CLICK_DEBOUNCE_MS      |      | 10                              |             |
 | LONG_PRESS_DURATION_MS |      | 1000                            |             |
 | RGB_PWM_FREQ           |      | 20000                           |             |
 | UART0_BAUD_RATE        |      | 115200                          |             |
+| MOTOR_PWM_FREQ         |      | 500                             |             |
 | RISCV_RAM_ADDR_WL      |      | $clog2(RISCV_RAM_DEPTH-1)       |             |
 | PWM_DCYCLE_WL          |      | $clog2(CLK_FREQ/RGB_PWM_FREQ+1) |             |
 | IO_REG_SPACE           |      | 16                              |             |
 | IO_SPACE_ADDR_WL       |      | $clog2(IO_REG_SPACE-1)          |             |
 ## Types
 
-| Name         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Description |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| io_registers | enum  {<br><span style="padding-left:20px">     DEBUG_REG            = 0,<br><span style="padding-left:20px">     UART0_TX_REG         = 1,<br><span style="padding-left:20px">     UART0_RX_REG         = 2,<br><span style="padding-left:20px">     LEDS_REG             = 3,<br><span style="padding-left:20px">     RGB0_REG             = 4,<br><span style="padding-left:20px">     RGB0_DCYCLE_REG      = 5,<br><span style="padding-left:20px">     RGB1_REG             = 6,<br><span style="padding-left:20px">     RGB1_DCYCLE_REG      = 7,<br><span style="padding-left:20px">     BUTTONS_REG          = 8,<br><span style="padding-left:20px">     SWITCHES_REG         = 9   } |             |
+| Name         | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Description |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| io_registers | enum  {<br><span style="padding-left:20px">     DEBUG_REG           =  0,<br><span style="padding-left:20px">     UART0_TX_REG        =  1,<br><span style="padding-left:20px">     UART0_RX_REG        =  2,<br><span style="padding-left:20px">     LEDS_REG            =  3,<br><span style="padding-left:20px">     RGB0_REG            =  4,<br><span style="padding-left:20px">     RGB0_DCYCLE_REG     =  5,<br><span style="padding-left:20px">     RGB1_REG            =  6,<br><span style="padding-left:20px">     RGB1_DCYCLE_REG     =  7,<br><span style="padding-left:20px">     BUTTONS_REG         =  8,<br><span style="padding-left:20px">     SWITCHES_REG        =  9,<br><span style="padding-left:20px">     M0_FWD_PWM_REG      = 10,<br><span style="padding-left:20px">     M0_BWD_PWM_REG      = 11,<br><span style="padding-left:20px">     M1_FWD_PWM_REG      = 12,<br><span style="padding-left:20px">     M1_BWD_PWM_REG      = 13   } |             |
 ## Processes
 - unnamed: (  )
   - **Type:** always_comb
@@ -124,8 +130,8 @@
   - **Type:** always_comb
 - uart0_comb: (  )
   - **Type:** always_comb
-- uart0_proc: ( @( posedge clk ) )
-  - **Type:** always_ff
+- dc_motors_pwm_comb: (  )
+  - **Type:** always_comb
 - unnamed: (  )
   - **Type:** always_comb
 ## Instantiations

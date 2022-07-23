@@ -77,3 +77,8 @@ For the Arty-S7-ROVER I am using two [CHIHAI GM37-550 DC motor ](https://www.ali
 </p>
 
 ## The RTL
+
+The DC motors are controlled by four independent PWM blocks. All have the same PWM frequency of 500 Hz[^1].
+
+[^1]: Finding the right PWM frequency and duty cycle was an interesting experiment, for more details check my post [🚎 Arty-S7-Rover (experiments)](spartan7_blog_experiments.md)
+

@@ -24,7 +24,7 @@
 | tx_uart   | output    |                       |             |
 | rx_valid  | output    |                       |             |
 | rx_data   | output    | [DATA_BITS-1:0]       |             |
-| rx_uart   | input     |                       |             |
+| rx_uart   | input     | wire                  |             |
 ## Signals
 
 | Name                     | Type                                                                                                                                                                                                      | Description |
