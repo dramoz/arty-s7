@@ -312,6 +312,35 @@ The VexRiscv is a plugin-based HDL RISC-V core. For this project, a simple archi
 <i>Arty-S7 VexRiscv core IO diagram</i>
 </p>
 
+#### Firmware
+
+The firmware for the core processor is done in C++. As the FW is a bare metal implementation, it is necessary to implement some initialization code and define a proper link methodology. The FW build is done by `make`. After the riscv-toolchain is installed, building the FW is straightforward.
+
+```bash
+cd arty-s7/projects/arty_s7_atrover/vexriscv_generator/VexRiscvBase/
+# make clean; script -c "MK_DBG=1 make"
+./build_fw.sh
+```
+
+The Linker sections file and the Makefile are located at the same directory of the `./build_fw.sh` script.
+
+---
+
+<pre><font color="#3465A4"><b>arty-s7/projects/arty_s7_atrover/vexriscv_generator/VexRiscvBase/src</b></font>
+├── <font color="#4E9A06"><b>cpu_layout.h</b></font>
+├── <font color="#3465A4"><b>include</b></font>
+│   └── <font color="#4E9A06"><b>memory_map.h</b></font>
+├── <font color="#4E9A06"><b>macros.S</b></font>
+├── <font color="#4E9A06"><b>main.cpp</b></font>
+├── <font color="#4E9A06"><b>start.S</b></font>
+└── <font color="#4E9A06"><b>trap.cpp</b></font>
+</pre>
+<p align = "center">
+🗁<i>Arty-S7-Rover Firmware</i>
+</p>
+
+
+---
 ### Core RAM
 
 <p align = "center">

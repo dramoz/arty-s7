@@ -32,7 +32,11 @@ The Arty S7 development board is a great starting point. It comes with a lot of 
 
 ### Toolchain and C++ compile
 
-`volatile`
+Doing a bare metal implementation from scratch was a worthy challenge. There was a lot to re-learn about linking sections, instruction memory and data memory layout. I can tell that I level up my embedded microprocessor knowledge and the time spent was a good investment.
+
+### HDL
+
+Using the VexRiscv instead of other soft cores alternatives, although a harder path, gave me the opportunity to get a better understanding of the [RISC-V ISA (Instruction Set Architecture)](https://en.wikipedia.org/wiki/RISC-V). Also, the need to implement some basic RTL blocks was a good task to refresh some gone knowledge.
 
 ## Future work
 
