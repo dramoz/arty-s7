@@ -78,7 +78,7 @@ module arty_s7_atrover #(
   localparam MOTOR_PWM_FREQ  = 500;
   
   // Distance measurement
-  localparam DISTANCE_SENSOR_PING_FREQ        = 100;
+  localparam DISTANCE_SENSOR_PING_FREQ        = 10;
   localparam DISTANCE_SENSOR_TRIG_DURATION_US = 10;
   localparam DISTANCE_SENSOR_MAX_DISTANCE_M  = 4;
   
@@ -331,6 +331,9 @@ module arty_s7_atrover #(
       end
       
       // Distance sensor
+      if(fnt_distance_vld == 1'b1) begin
+        io_regs[DISTANCE_REG] <= { 1'b1, { (RISCV_WL-DISTANCE_WL-1){1'b0} }, fnt_distance_cm};
+      end
       
       // IO FW access
       if(dBus_cmd_valid && io_slct) begin
@@ -438,6 +441,7 @@ module arty_s7_atrover #(
   // ----------------------------------------
   // Distance Sensor Trigger
   localparam DISTANCE_WL = $clog2(100*DISTANCE_SENSOR_MAX_DISTANCE_M + 1);
+  logic                   fnt_distance_vld;
   logic [DISTANCE_WL-1:0] fnt_distance_cm;
   hc_sr04_distance_sensor
   #(
@@ -452,6 +456,7 @@ module arty_s7_atrover #(
     .clk(clk),
     .sn_trigger(fnt_dst_sens_trigger),
     .sn_edge(fnt_dst_sens_edge),
+    .distance_vld(fnt_distance_vld),
     .distance_cm(fnt_distance_cm)
   );
   

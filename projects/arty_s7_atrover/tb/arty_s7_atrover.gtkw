@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Sat Jul 23 12:43:07 2022
+[*] Sat Jul 23 19:27:20 2022
 [*]
 [dumpfile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/dump.fst"
-[dumpfile_mtime] "Sat Jul 23 12:42:16 2022"
-[dumpfile_size] 5961876
+[dumpfile_mtime] "Sat Jul 23 19:25:42 2022"
+[dumpfile_size] 4492046
 [savefile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/arty_s7_atrover.gtkw"
 [timestart] 0
 [size] 2560 1370
 [pos] -1 -1
-*-28.302338 834000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-28.302338 193000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] arty_s7_atrover.
 [sst_width] 379
 [signals_width] 258
@@ -24,7 +24,13 @@ arty_s7_atrover.sys_reset
 ---------------------
 @800200
 -status
+@22
+[color] 5
+arty_s7_atrover.btn[3:0]
+[color] 5
+arty_s7_atrover.sw[3:0]
 @c00022
+[color] 2
 arty_s7_atrover.leds[3:0]
 @28
 (0)arty_s7_atrover.leds[3:0]
@@ -34,17 +40,23 @@ arty_s7_atrover.leds[3:0]
 @1401200
 -group_end
 @28
+[color] 2
 arty_s7_atrover.rgb0[2:0]
+[color] 2
 arty_s7_atrover.rgb1[2:0]
 @820
 arty_s7_atrover.uart0_inst.tx_data[7:0]
 arty_s7_atrover.uart0_inst.rx_data[7:0]
-@29
-arty_s7_atrover.m0_bwd_pwm
 @28
+[color] 4
+arty_s7_atrover.m0_bwd_pwm
+[color] 4
 arty_s7_atrover.m0_fwd_pwm
+[color] 4
 arty_s7_atrover.m1_bwd_pwm
+[color] 4
 arty_s7_atrover.m1_fwd_pwm
+@29
 arty_s7_atrover.fnt_dst_sens_trigger
 @24
 arty_s7_atrover.hc_sr04_distance_sensor_inst.distance_cm[8:0]
@@ -181,7 +193,7 @@ arty_s7_atrover.vexriscv_ram_inst.dbus_dout[31:0]
 -dBus
 @1401200
 -VexRiscv-RAM
-@c00200
+@800200
 -io_regs
 @24
 arty_s7_atrover.io_regs[0][31:0]
@@ -240,7 +252,7 @@ arty_s7_atrover.io_regs[12][31:0]
 arty_s7_atrover.io_regs[13][31:0]
 arty_s7_atrover.io_regs[14][31:0]
 arty_s7_atrover.io_regs[15][31:0]
-@1401200
+@1000200
 -io_regs
 @c00200
 -IO-access
@@ -291,8 +303,9 @@ arty_s7_atrover.uart0_inst.rx_valid
 arty_s7_atrover.uart0_inst.rx_data[7:0]
 @1401200
 -uart_basic
-@c00200
+@800200
 -uart
+@c00200
 -uart_params
 @420
 arty_s7_atrover.uart0_inst.BAUD_RATE
@@ -332,6 +345,7 @@ arty_s7_atrover.uart0_inst.rx_valid
 arty_s7_atrover.uart0_inst.rx_data[7:0]
 @1401200
 -UART_RX
+@1000200
 -uart
 @200
 ---------------------
@@ -352,7 +366,7 @@ arty_s7_atrover.dc_motors_pwm_gen[0].pwm_dc_motor.o_pwm
 -motors_pwm
 @200
 ---------------------
-@c00200
+@800200
 -distance_sensor
 @420
 arty_s7_atrover.hc_sr04_distance_sensor_inst.PING_FREQ
@@ -373,7 +387,7 @@ arty_s7_atrover.hc_sr04_distance_sensor_inst.edge_cnt[31:0]
 arty_s7_atrover.hc_sr04_distance_sensor_inst.edge_d
 arty_s7_atrover.hc_sr04_distance_sensor_inst.sn_edge
 arty_s7_atrover.hc_sr04_distance_sensor_inst.sn_trigger
-@1401200
+@1000200
 -distance_sensor
 [pattern_trace] 1
 [pattern_trace] 0

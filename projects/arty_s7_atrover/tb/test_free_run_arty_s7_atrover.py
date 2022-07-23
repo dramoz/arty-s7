@@ -61,6 +61,7 @@ async def free_run_arty_s7_atrover(dut, times=300, duration=10, units='us'):
   
   dut._log.info(f"Running {duration} {units} (CLK_FREQ:{(CLK_FREQ/1e6)} MHz, CLK_PERIOD: {clk_period} ns)")
   await reset(dut, clk_cycles=10000)
+  await Timer(400, units='us')
   
   cocotb.start_soon(fake_distance(dut))
   
