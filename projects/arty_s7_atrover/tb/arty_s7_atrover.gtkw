@@ -1,22 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Fri Jul 22 20:31:37 2022
+[*] Sat Jul 23 07:57:26 2022
 [*]
 [dumpfile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/dump.fst"
-[dumpfile_mtime] "Fri Jul 22 20:31:00 2022"
-[dumpfile_size] 803297
+[dumpfile_mtime] "Sat Jul 23 07:57:06 2022"
+[dumpfile_size] 15841882
 [savefile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/arty_s7_atrover.gtkw"
-[timestart] 614600000
+[timestart] 0
 [size] 2560 1370
 [pos] -1 -1
-*-24.289251 251720000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-29.992018 109000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] arty_s7_atrover.
 [treeopen] arty_s7_atrover.dc_motors_pwm_gen[0].
-[treeopen] arty_s7_atrover.dc_motors_pwm_gen[3].
 [sst_width] 379
 [signals_width] 258
 [sst_expanded] 1
-[sst_vpaned_height] 871
+[sst_vpaned_height] 870
 @28
 arty_s7_atrover.resetn
 arty_s7_atrover.clk
@@ -60,9 +59,7 @@ arty_s7_atrover.uart_tx
 @28
 arty_s7_atrover.m0_bwd_pwm
 arty_s7_atrover.m0_fwd_pwm
-@29
 arty_s7_atrover.m1_bwd_pwm
-@28
 arty_s7_atrover.m1_fwd_pwm
 @1000200
 -motors_pwm
@@ -142,7 +139,7 @@ arty_s7_atrover.vexriscv_ram_inst.dbus_dout[31:0]
 -dBus
 @1401200
 -VexRiscv-RAM
-@800200
+@c00200
 -io_regs
 @24
 arty_s7_atrover.io_regs[0][31:0]
@@ -201,7 +198,7 @@ arty_s7_atrover.io_regs[12][31:0]
 arty_s7_atrover.io_regs[13][31:0]
 arty_s7_atrover.io_regs[14][31:0]
 arty_s7_atrover.io_regs[15][31:0]
-@1000200
+@1401200
 -io_regs
 @c00200
 -IO-access
@@ -307,14 +304,39 @@ arty_s7_atrover.dc_motors_pwm_gen[3].pwm_dc_motor.WL
 -m0
 @28
 arty_s7_atrover.dc_motors_pwm_gen[0].pwm_dc_motor.o_pwm
-@22
-arty_s7_atrover.dc_motors_pwm_gen[0].pwm_dc_motor.i_duty_cycle[6:0]
-arty_s7_atrover.dc_motors_pwm_gen[0].pwm_dc_motor.pwm_cnt[6:0]
 @1000200
 -m0
 @1401200
 -motors_pwm
 @200
 ---------------------
+@420
+arty_s7_atrover.hc_sr04_distance_sensor_inst.CLK_FREQ
+arty_s7_atrover.hc_sr04_distance_sensor_inst.PING_FREQ
+arty_s7_atrover.hc_sr04_distance_sensor_inst.TRIG_DURATION_US
+arty_s7_atrover.hc_sr04_distance_sensor_inst.MAX_DISTANCE_M
+arty_s7_atrover.hc_sr04_distance_sensor_inst.SOUND_SPEED_M_S
+arty_s7_atrover.hc_sr04_distance_sensor_inst.PING_CNT
+arty_s7_atrover.hc_sr04_distance_sensor_inst.PING_CNT_WL
+arty_s7_atrover.hc_sr04_distance_sensor_inst.TRIG_CNT
+arty_s7_atrover.hc_sr04_distance_sensor_inst.EDGE_CNT_WL
+arty_s7_atrover.hc_sr04_distance_sensor_inst.MAX_TIME_US
+arty_s7_atrover.hc_sr04_distance_sensor_inst.WL
+@28
+arty_s7_atrover.hc_sr04_distance_sensor_inst.reset
+arty_s7_atrover.hc_sr04_distance_sensor_inst.clk
+@22
+arty_s7_atrover.hc_sr04_distance_sensor_inst.distance_cm[8:0]
+@28
+arty_s7_atrover.hc_sr04_distance_sensor_inst.distance_vld
+@22
+arty_s7_atrover.hc_sr04_distance_sensor_inst.edge_cnt[31:0]
+@28
+arty_s7_atrover.hc_sr04_distance_sensor_inst.edge_d
+@22
+arty_s7_atrover.hc_sr04_distance_sensor_inst.ping_trigg_cnt[19:0]
+@28
+arty_s7_atrover.hc_sr04_distance_sensor_inst.sn_edge
+arty_s7_atrover.hc_sr04_distance_sensor_inst.sn_trigger
 [pattern_trace] 1
 [pattern_trace] 0

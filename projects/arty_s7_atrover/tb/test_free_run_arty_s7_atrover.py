@@ -32,20 +32,17 @@ async def reset(dut, clk_cycles=12):
   dut.resetn.value = 1
 
 @cocotb.test()
-async def free_run_arty_s7_atrover(dut, times=10, duration=1, units='us'):
+async def free_run_arty_s7_atrover(dut, times=100, duration=1, units='s'):
   """Just let it run a few microseconds"""
   
   clk_period = int(1e9/CLK_FREQ)
   await init(dut, clk_period=clk_period, units="ns")
   
   dut._log.info(f"Running {duration} {units} (CLK_FREQ:{(CLK_FREQ/1e6)} MHz, CLK_PERIOD: {clk_period} ns)")
-  await reset(dut)
+  await reset(dut, clk_cycles=10000)
   
-  await Timer(1, units='us')
-  dut.btn.value = 0x5
-  
-  for _ in range(times):
-    dut._log.info(f".")
+  for inx in range(times):
+    dut._log.info(f"{inx}/{times}")
     await Timer(duration, units=units)
     
   dut._log.info("Done...")

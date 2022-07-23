@@ -58,7 +58,7 @@ module hc_sr04_distance_sensor
   always_ff @( posedge clk ) begin: distance_sensor_trigger_proc
     if(reset) begin
       ping_trigg_cnt <= '0;
-      sn_trigger        <= '0;
+      sn_trigger     <= '0;
       
     end else begin
       if(ping_trigg_cnt < (PING_CNT+TRIG_CNT)) begin
