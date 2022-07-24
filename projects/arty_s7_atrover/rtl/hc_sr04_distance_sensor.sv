@@ -13,19 +13,23 @@
 // range: 0.002 ~ 4 meters
 // speed of sound: 340 m/s or 0.034 cm/µs (https://www.engineersedge.com/physics/speed_of_sound_13241.htm)
 // -> 34000 cm/s, 34000/1000000 cm/us -> 0.034 cm/us
+//
+//   1s  -> 340m 
+// 100ms ->  34m
+//  10ms ->   3.4m
+//   1ms ->     34cm
 // 
-// s = d / t -> time is double (go and back)
-// -> s = d / (t/2)
+// Max. time measure (range 4m -> 2xtime of flight => 8m)
+// s*t = d
+// 8/340 -> 23.6ms
 //
-// 2cm -> 34000cm/s = 2cm / (t/2)
-//        34000cm/s = 4cm / t
-//        t         = 4s/34000
-//      => t = 0.0001176471s -> 117.65 us, 1cm -> 58.825us
+// Min. time measure (range 2cm -> 2xtime of flight => 4cm -> 0.04m)
+// s*t = d
+// 0.04/340 -> 0.000118s -> 118us
 //
-// 4m  -> 340m/s = 4m/(t/2)
-//        340m/s = 8m/t
-//        t      = 8s/340
-//      => t = 0.0235294118s -> 2.352 ms -> 2352 us
+// Distance
+// n-ticks, 10e-9 * N = t
+// d = s*t = 34000 cm/s * 10e-9 * N
 ////////////////////////////////////////////////////////////////////////////////
 
 `default_nettype none
@@ -36,7 +40,7 @@ module hc_sr04_distance_sensor
   parameter PING_FREQ        = 100,
   parameter TRIG_DURATION_US = 10,
   parameter MAX_DISTANCE_M   = 4,
-  parameter WL               = $clog2(MAX_DISTANCE_M*100 + 1)
+  parameter O_WL             = 32
 )
 (
   input  wire reset,
@@ -45,10 +49,12 @@ module hc_sr04_distance_sensor
   output logic sn_trigger,
   input  wire  sn_edge,
   
-  output logic          distance_vld,
-  output logic [WL-1:0] distance_cm
+  output logic            o_valid,
+  output logic [O_WL-1:0] edge_ticks
 );
   localparam SOUND_SPEED_M_S = 340;
+  localparam real MAX_TIME = ((2*MAX_DISTANCE_M)/SOUND_SPEED_M_S);
+  localparam EDGE_CNT_WL = $clog2(int'(real'(CLK_FREQ)*MAX_TIME));
   
   localparam PING_CNT    = int'(CLK_FREQ/PING_FREQ);
   localparam TRIG_CNT = int'((TRIG_DURATION_US*CLK_FREQ)/1e6);
@@ -71,8 +77,6 @@ module hc_sr04_distance_sensor
     end
   end: distance_sensor_trigger_proc
   
-  localparam MAX_TIME_US = int'( (2*MAX_DISTANCE_M*1e6)/SOUND_SPEED_M_S);
-  localparam EDGE_CNT_WL = 32;
   
   logic                   edge_d;
   logic [EDGE_CNT_WL-1:0] edge_cnt;
@@ -80,21 +84,25 @@ module hc_sr04_distance_sensor
     if(reset) begin
       edge_d      <= 1'b0;
       edge_cnt    <= '0;
-      distance_vld <= 1'b0;
-      distance_cm  <= '0;
+      o_valid <= 1'b0;
+      edge_ticks  <= '0;
       
     end else begin
       edge_d <= sn_edge;
       
       if(edge_d && !sn_edge) begin
         edge_cnt     <= '0;
-        distance_vld <= 1;
-        distance_cm  <= edge_cnt;
+        o_valid <= 1;
+        
+        edge_ticks           <= '0;
+        edge_ticks[O_WL-1:0] <= edge_cnt;
         
       end else begin
-        distance_vld <= 0;
+        o_valid <= 0;
         if(sn_edge) begin
-          edge_cnt <= edge_cnt + 1;
+          if(edge_cnt != '1) begin
+            edge_cnt <= edge_cnt + 1;
+          end
         end
       end
     end

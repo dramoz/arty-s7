@@ -36,8 +36,8 @@ module arty_s7_atrover #(
   output logic m1_bwd_pwm,
   
   // Distance Sensor(s)
-  output logic fnt_dst_sens_trigger,
-  input  wire  fnt_dst_sens_edge,
+  output logic frnt_dst_sens_trigger,
+  input  wire  frnt_dst_sens_edge,
   
   // UART
   input  wire  uart_rx,
@@ -286,7 +286,7 @@ module arty_s7_atrover #(
     M0_BWD_PWM_REG      = 11,
     M1_FWD_PWM_REG      = 12,
     M1_BWD_PWM_REG      = 13,
-    DISTANCE_REG        = 14
+    DST_SENSOR_RD_REG        = 14
   } io_registers;
   
   logic                io_wen;
@@ -331,8 +331,8 @@ module arty_s7_atrover #(
       end
       
       // Distance sensor
-      if(fnt_distance_vld == 1'b1) begin
-        io_regs[DISTANCE_REG] <= { 1'b1, { (RISCV_WL-DISTANCE_WL-1){1'b0} }, fnt_distance_cm};
+      if(frnt_valid == 1'b1) begin
+        io_regs[DST_SENSOR_RD_REG] <= {1'b1, frnt_edge_ticks};
       end
       
       // IO FW access
@@ -346,7 +346,7 @@ module arty_s7_atrover #(
           
           // HW op. when reading back registers
           case({ {(RISCV_WL-IO_SPACE_ADDR_WL){1'b0}}, io_addr})
-            UART0_RX_REG, DISTANCE_REG: begin
+            UART0_RX_REG, DST_SENSOR_RD_REG: begin
               io_regs[io_addr][31] <= 1'b0;
             end
           endcase
@@ -440,24 +440,24 @@ module arty_s7_atrover #(
   
   // ----------------------------------------
   // Distance Sensor Trigger
-  localparam DISTANCE_WL = $clog2(100*DISTANCE_SENSOR_MAX_DISTANCE_M + 1);
-  logic                   fnt_distance_vld;
-  logic [DISTANCE_WL-1:0] fnt_distance_cm;
+  logic                frnt_valid;
+  logic [RISCV_WL-2:0] frnt_edge_ticks;
   hc_sr04_distance_sensor
   #(
     .CLK_FREQ(CLK_FREQ),
     .PING_FREQ(DISTANCE_SENSOR_PING_FREQ),
     .TRIG_DURATION_US(DISTANCE_SENSOR_TRIG_DURATION_US),
-    .MAX_DISTANCE_M(DISTANCE_SENSOR_MAX_DISTANCE_M)
+    .MAX_DISTANCE_M(DISTANCE_SENSOR_MAX_DISTANCE_M),
+    .O_WL(RISCV_WL-1)
   )
   hc_sr04_distance_sensor_inst
   (
     .reset(sys_reset),
     .clk(clk),
-    .sn_trigger(fnt_dst_sens_trigger),
-    .sn_edge(fnt_dst_sens_edge),
-    .distance_vld(fnt_distance_vld),
-    .distance_cm(fnt_distance_cm)
+    .sn_trigger(frnt_dst_sens_trigger),
+    .sn_edge(frnt_dst_sens_edge),
+    .o_valid(frnt_valid),
+    .edge_ticks(frnt_edge_ticks)
   );
   
   // ----------------------------------------

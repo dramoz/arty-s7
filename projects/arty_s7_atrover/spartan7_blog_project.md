@@ -453,9 +453,20 @@ To avoid [metastability](https://alchitry.com/metastability-and-debouncing-veril
 
 ## Simulation
 
-The simulation of the project is handled by make.
+The simulation of the project is handled by make and is done with the aid of CoCoTB/Verilator.
 
-Speeding up the simulation
+- CoCoTB provides the capability of implementing the testcases in Python
+- Verilator is a really fast SystemVerilog simulator (as fast as it can get)
+
+Running a simulation includes three steps:
+
+- Generating the firmware HEX files
+- Running CoCoTB
+- Opening the generated wave with GTK
+
+### Speeding up the simulation
+
+
 
 - Firmware: 
 - RTL:

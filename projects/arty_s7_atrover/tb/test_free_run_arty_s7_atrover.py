@@ -23,7 +23,7 @@ async def init(dut, clk_period, units):
   dut.sw.value      = 0
   dut.btn.value     = 0
   dut.uart_rx.value = 0
-  dut.fnt_dst_sens_edge.value = 0
+  dut.frnt_dst_sens_edge.value = 0
   
   cocotb.start_soon(Clock(signal=dut.clk, period=clk_period, units="ns").start())
   
@@ -37,20 +37,20 @@ async def reset(dut, clk_cycles=12):
 
 async def fake_distance(dut):
   while True:
-    await RisingEdge(dut.fnt_dst_sens_trigger)
+    await RisingEdge(dut.frnt_dst_sens_trigger)
     
     sim_time = get_sim_time('us')
-    await FallingEdge(dut.fnt_dst_sens_trigger)
+    await FallingEdge(dut.frnt_dst_sens_trigger)
     
     dut._log.info(f"got trigge pulse of {int(get_sim_time('us') - sim_time)} us")
-    dut.fnt_dst_sens_edge.value = 1
+    dut.frnt_dst_sens_edge.value = 1
     
     edge_echo = random.randint(60, 600)
     dut._log.info(f"generating echo/edge of {edge_echo} us")
     await Timer( edge_echo, units='us')
     
     dut._log.info(f"estimated distance {(340*edge_echo*1e-6*100):.2f} cm")
-    dut.fnt_dst_sens_edge.value = 0
+    dut.frnt_dst_sens_edge.value = 0
     
 @cocotb.test()
 async def free_run_arty_s7_atrover(dut, times=300, duration=10, units='us'):

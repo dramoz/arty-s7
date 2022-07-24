@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Sat Jul 23 19:27:20 2022
+[*] Sun Jul 24 03:08:38 2022
 [*]
 [dumpfile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/dump.fst"
-[dumpfile_mtime] "Sat Jul 23 19:25:42 2022"
-[dumpfile_size] 4492046
+[dumpfile_mtime] "Sun Jul 24 03:07:38 2022"
+[dumpfile_size] 12324
 [savefile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/arty_s7_atrover.gtkw"
 [timestart] 0
 [size] 2560 1370
 [pos] -1 -1
-*-28.302338 193000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-28.477425 603600000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] arty_s7_atrover.
 [sst_width] 379
 [signals_width] 258
 [sst_expanded] 1
-[sst_vpaned_height] 870
+[sst_vpaned_height] 872
 @28
 arty_s7_atrover.resetn
 arty_s7_atrover.clk
@@ -56,9 +56,8 @@ arty_s7_atrover.m0_fwd_pwm
 arty_s7_atrover.m1_bwd_pwm
 [color] 4
 arty_s7_atrover.m1_fwd_pwm
-@29
 arty_s7_atrover.fnt_dst_sens_trigger
-@24
+@25
 arty_s7_atrover.hc_sr04_distance_sensor_inst.distance_cm[8:0]
 @1000200
 -status
