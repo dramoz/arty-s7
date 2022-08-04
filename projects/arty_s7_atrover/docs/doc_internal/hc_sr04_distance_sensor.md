@@ -35,7 +35,7 @@
 | Name            | Type | Value                                  | Description |
 | --------------- | ---- | -------------------------------------- | ----------- |
 | SOUND_SPEED_M_S |      | 340                                    |             |
-| MAX_TIME        | real | ((2*MAX_DISTANCE_M)/SOUND_SPEED_M_S)   |             |
+| MAX_TIME        | real | ((2.0*MAX_DISTANCE_M)/SOUND_SPEED_M_S) |             |
 | EDGE_CNT_WL     |      | $clog2(int'(real'(CLK_FREQ)*MAX_TIME)) |             |
 | PING_CNT        |      | undefined                              |             |
 | TRIG_CNT        |      | undefined                              |             |

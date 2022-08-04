@@ -14,7 +14,7 @@ All the files are open-source, MIT license and can be downloaded from [<img src=
 
 In this second part, a range ultrasound sensor and a 2xDC motor driver would be implemented.
 
-If you have note read it yet, please check the first blog [🚎 Arty-S7-Rover (base architecture)](spartan7_blog_project.md) as this section relay on that.
+If you have note read it yet, please check the first blog [🚎 Arty-S7-Rover (base architecture)](spartan7_blog_project.md) as this section rely on that.
 
 ## The Hardware
 
@@ -107,7 +107,7 @@ The DC motors required special care, as only one PWM per motor should be working
 
 The firmware is aware of the current direction and speed, and on a direction/speed change request it performs the required steps as slowing and stopping first before changing direction.
 
-> ⚠ At the time of posting this blog, the DC Motor PWM C++ Control Class is still under development and requires a more formal testing - please use with caution.
+> ⚠ At the time of posting this blog, the DC Motor PWM C++ Control Class is still under development and requires more formal testing - please use it with caution.
 
 ```c++
 // --------------------------------------------------------------------------------
@@ -357,36 +357,6 @@ The controller is responsible for generating the trigger and measuring the durat
 </p>
 
 ```verilog
-////////////////////////////////////////////////////////////////////////////////
-// Overview
-// HC-SR04 Ultrasound distance sensor
-// - Wait N ms, send a pulse of 10us
-// - Measure ECHO Pin length, report back measurement in cm
-//
-// range: 0.002 ~ 4 meters
-// speed of sound: 340 m/s or 0.034 cm/µs (https://www.engineersedge.com/physics/speed_of_sound_13241.htm)
-// -> 34000 cm/s, 34000/1000000 cm/us -> 0.034 cm/us
-//
-//   1s  -> 340m 
-// 100ms ->  34m
-//  10ms ->   3.4m
-//   1ms ->     34cm
-// 
-// Max. time measure (range 4m -> 2xtime of flight => 8m)
-// s*t = d
-// 8/340 -> 23.6ms
-//
-// Min. time measure (range 2cm -> 2xtime of flight => 4cm -> 0.04m)
-// s*t = d
-// 0.04/340 -> 0.000118s -> 118us
-//
-// Distance
-// n-ticks, 10e-9 * N = t
-// d = s*t = 34000 cm/s * 10e-9 * N
-////////////////////////////////////////////////////////////////////////////////
-
-`default_nettype none
-
 module hc_sr04_distance_sensor
 #(
   parameter CLK_FREQ         = 100000000,
@@ -406,7 +376,7 @@ module hc_sr04_distance_sensor
   output logic [O_WL-1:0] edge_ticks
 );
   localparam SOUND_SPEED_M_S = 340;
-  localparam real MAX_TIME = ((2*MAX_DISTANCE_M)/SOUND_SPEED_M_S);
+  localparam real MAX_TIME = ((2.0*MAX_DISTANCE_M)/SOUND_SPEED_M_S);
   localparam EDGE_CNT_WL = $clog2(int'(real'(CLK_FREQ)*MAX_TIME));
   
   localparam PING_CNT    = int'(CLK_FREQ/PING_FREQ);
@@ -437,15 +407,15 @@ module hc_sr04_distance_sensor
     if(reset) begin
       edge_d      <= 1'b0;
       edge_cnt    <= '0;
-      o_valid <= 1'b0;
+      o_valid     <= 1'b0;
       edge_ticks  <= '0;
       
     end else begin
       edge_d <= sn_edge;
       
       if(edge_d && !sn_edge) begin
-        edge_cnt     <= '0;
-        o_valid <= 1;
+        edge_cnt <= '0;
+        o_valid  <= 1;
         
         edge_ticks           <= '0;
         edge_ticks[O_WL-1:0] <= edge_cnt;
@@ -463,13 +433,254 @@ module hc_sr04_distance_sensor
   
 endmodule: hc_sr04_distance_sensor
 
-`default_nettype wire
-
 ```
 
 The distance in `cm` is calculated as $34000t$ (as measured by the HDL, or $N_{cycles}*CLK_{FREQ}$)
 
-[LINK to youtube DEMO]
+> 📝 Converting the measured value from clock-cycles count to `cm` is required for human reading purposes. There is no actual need to convert it and internally, it is possible to work with the cycles count as it is to control the rover.
+
+### Lab Test
+
+A small FW was done to test the distance sensor against the rover's speed. [Arty-S7-Rover Distance Sensor Lab Test Demo-Video](https://youtu.be/LdeiwEiGDuM)
+
+```c++
+#include<cstdint>
+#include "memory_map.h"
+
+const uint32_t CLK_FREQ = 100000000UL;
+const uint32_t MSB_MASK = 0x80000000;
+
+const uint32_t RGB_PWM_FREQ =     20000;
+const uint32_t RGB_DCYLE    = uint32_t(0.01 * CLK_FREQ/RGB_PWM_FREQ);
+
+const uint32_t MOTOR_PWM_FREQ   = 500;
+const uint32_t MOTOR_FULL_STOP  = 0;
+const uint32_t MOTOR_SLOW_SPEED = uint32_t(0.3 * CLK_FREQ/MOTOR_PWM_FREQ);
+const uint32_t MOTOR_MEDIUM_SPEED = uint32_t(0.5 * CLK_FREQ/MOTOR_PWM_FREQ);
+const uint32_t MOTOR_HIGH_SPEED = uint32_t(0.8 * CLK_FREQ/MOTOR_PWM_FREQ);
+
+// Distance calc.
+// n-ticks, 1/clk_freq * N = t
+// d = s*t = 34000 cm/s * 1/clk_freq * N
+// -> ticks: d = 34000 cm/s * 1/clk_freq * N
+//           N = d*clk_freq/34000
+#define D2CNT(D) (uint32_t)((2*D*CLK_FREQ)/34000UL)
+const uint32_t DISTANCE_STOP   = D2CNT(10);
+const uint32_t DISTANCE_SLOW   = D2CNT(50);
+const uint32_t DISTANCE_MEDIUM = D2CNT(100);
+
+// -------------------------------------------------------------------
+const uint32_t MAX_MSG_LEN = 80;
+void reverse_string(char str[], int length)
+{
+    int start = 0;
+    int end = length;
+    while (start < end)
+    {
+        auto swap = *(str+start);
+        *(str+start) = *(str+end);
+        *(str+end) = swap;
+        start++;
+        end--;
+    }
+}
+
+uint32_t uitoa(int num, char* str)
+{
+    uint32_t i = 0;
+ 
+    if (num == 0)
+    {
+        str[i++] = '0';
+    }
+    else {
+      // Process individual digits
+      while (num != 0)
+      {
+          int rem = num % 10;
+          str[i++] = rem + '0';
+          num = num/10;
+      }
+      
+      // Reverse the string
+      reverse_string(str, i);
+    }
+    
+    str[i++] = '\r';
+    str[i++] = '\n';
+    str[i] = '\0';
+ 
+    return i;
+}
+void send_msg(const char* msg) {
+  uint32_t uart_tx;
+  
+  for(uint32_t inx=0; msg[inx] !=0; ++inx) {
+    do {
+      uart_tx = READ_IO(UART0_TX_REG);
+    } while( (uart_tx & MSB_MASK) != 0);
+    
+    WRITE_IO(UART0_TX_REG, (uint32_t)msg[inx] | MSB_MASK);
+  }
+}
+
+// -------------------------------------------------------------------
+int main(void) {
+  // LEDs
+  uint32_t leds_st = 1;
+  uint32_t rgb0 = 0x02;
+  uint32_t rgb1 = 0x02;
+  
+  // IOs
+  uint32_t btn = 0;
+  uint32_t sw  = 0;
+  uint32_t frnt_distance_rd;
+  
+  // Setup Motors PWMs
+  uint32_t motor_curr_speed = MOTOR_FULL_STOP;
+  WRITE_IO(M0_BWD_PWM_REG, MOTOR_FULL_STOP);
+  WRITE_IO(M0_FWD_PWM_REG, MOTOR_FULL_STOP);
+  WRITE_IO(M1_BWD_PWM_REG, MOTOR_FULL_STOP);
+  WRITE_IO(M1_FWD_PWM_REG, MOTOR_FULL_STOP);
+  
+  // Setup RGBs to low intensity
+  WRITE_IO(RGB0_DCYCLE_REG, RGB_DCYLE);
+  WRITE_IO(RGB1_DCYCLE_REG, RGB_DCYLE);
+  
+  // Turn on LEDs 1 to ACK PWR and RISCV boot OK.
+  WRITE_IO(LEDS_REG, leds_st);
+  
+  // UART Hello World
+  bool uart_tx_busy;
+  uint32_t uart_rx;
+  uint32_t uart_tx;
+  
+  const char* hello_msg = "Arty-S7 ROVER (VexRiscv)\r\n";
+  const char* press_btn = "\r\nPress ANY button to start test\r\n";
+  
+  send_msg(hello_msg);
+  
+  // Loop forever
+  const uint32_t do_rpt_ticks = 10000;
+  uint32_t rpt_cnt;
+  uint32_t msg_rpt_inx;
+  uint32_t msg_len;
+  char msg_rpt[MAX_MSG_LEN];
+  
+  uart_tx_busy = false;
+  uart_rx = 0;
+  frnt_distance_rd = 0;
+  for(;;) {
+    // Wait for user button to start test
+    send_msg(press_btn);
+    do {
+      btn = READ_IO(BUTTONS_REG);
+      
+      // Simple code to check FW and HW programmed
+      sw  = READ_IO(SWITCHES_REG);
+      leds_st = sw;
+      
+    } while(btn==0x00);
+    
+    // Setup test
+    rpt_cnt = 0;
+    motor_curr_speed = MOTOR_HIGH_SPEED;
+    
+    while(motor_curr_speed!=MOTOR_FULL_STOP) {
+      frnt_distance_rd = READ_IO(DST_SENSOR_RD_REG);
+      if(frnt_distance_rd & MSB_MASK) {
+        frnt_distance_rd &= ~MSB_MASK;
+        if(frnt_distance_rd <= DISTANCE_STOP) {
+          motor_curr_speed = MOTOR_FULL_STOP;
+          rgb0 = 0x01;
+          rgb1 = 0x01;
+        }
+        else if (frnt_distance_rd <= DISTANCE_SLOW) {
+          motor_curr_speed = MOTOR_SLOW_SPEED;
+          rgb0 = 0x02;
+          rgb1 = 0x02;
+        }
+        else if (frnt_distance_rd <= DISTANCE_MEDIUM) {
+          motor_curr_speed = MOTOR_MEDIUM_SPEED;
+          rgb0 = 0x04;
+          rgb1 = 0x04;
+        }
+        else {
+          motor_curr_speed = MOTOR_HIGH_SPEED;
+          rgb0 = 0x07;
+          rgb1 = 0x07;
+        }
+      } // if new distance read
+      
+      // Move FWD
+      WRITE_IO(M0_BWD_PWM_REG, MOTOR_FULL_STOP);
+      WRITE_IO(M0_FWD_PWM_REG, motor_curr_speed);
+      WRITE_IO(M1_BWD_PWM_REG, MOTOR_FULL_STOP);
+      WRITE_IO(M1_FWD_PWM_REG, motor_curr_speed);
+      
+      // Update LEDs
+      WRITE_IO(LEDS_REG, leds_st);
+      WRITE_IO(RGB0_REG, rgb0);
+      WRITE_IO(RGB1_REG, rgb1);
+      
+      // UART
+      uart_tx = READ_IO(UART0_TX_REG);
+      uart_tx_busy = ((uart_tx & MSB_MASK)!=0);
+      if(!uart_tx_busy) {
+        uart_rx = READ_IO(UART0_RX_REG);
+        if(uart_rx & MSB_MASK) {
+          WRITE_IO(UART0_TX_REG, uart_rx);
+        }
+        else {
+          ++rpt_cnt;
+          if(rpt_cnt == do_rpt_ticks) {
+            // Create messge
+            msg_rpt_inx = 0;
+            /*msg_rpt[msg_rpt_inx++] = 'd';
+            msg_rpt[msg_rpt_inx++] = ':';
+            msg_rpt[msg_rpt_inx++] = ' ';
+            msg_rpt_inx = uitoa(frnt_distance_rd, &msg_rpt[msg_rpt_inx]);
+            msg_rpt[msg_rpt_inx++] = '\r';
+            msg_rpt[msg_rpt_inx++] = '\n';
+            msg_rpt[msg_rpt_inx] = '\0';*/
+            msg_rpt_inx = uitoa(frnt_distance_rd, &msg_rpt[msg_rpt_inx]);
+            msg_rpt_inx = 0;
+          }
+          else if(rpt_cnt >= do_rpt_ticks) {
+            if(msg_rpt[msg_rpt_inx] != 0) {
+              WRITE_IO(UART0_TX_REG, (uint32_t)(msg_rpt[msg_rpt_inx]) | MSB_MASK);
+              ++msg_rpt_inx;
+            }
+            else {
+              rpt_cnt = 0;
+            }
+          }
+        } // check do rpt
+      } // if !uart_tx_busy
+    } // end while moving
+  } // forever
+  
+  return 0;
+}
+```
+
+### Averaging the measured distance
+
+As seen in the video, by using the instantaneous measurement, the rover can instantly request changes to the speed - as some measurements can be erroneous. To mitigate this effect, an average value was used instead. Two options are possible for this:
+
+- FW implementation
+- RTL implementation
+
+Given the abundant resources in the Spartan-7, it made more sense to have done the average in the FPGA as an extra IP block. By doing so, less computing power was required from the RISC-V softcore, which can become an issue in the future as the project evolve.
+
+The implementation is called a [Moving Average Filter](https://zipcpu.com/dsp/2017/10/16/boxcar.html).
+
+<p align = "center">
+  <img src="docs/doc_internal/boxcar.svg" alt="Moving Average Filter Block IO diagram" style="height:15em;" title="Moving Average Filter Block IO diagram" />
+</p>
+<p align = "center">
+<i>Moving Average Filter Block IO diagram</i>
+</p>
 
 ## Final Remarks
 
@@ -479,3 +690,4 @@ The versatility of the Spartan 7 was amazing:
 - Total independent IP block for sensor control
   - Free processor time
   - Highly configurable
+- Easy to add extra blocks like Digital filters as required like a [Moving Average FIR](https://en.wikipedia.org/wiki/Finite_impulse_response).

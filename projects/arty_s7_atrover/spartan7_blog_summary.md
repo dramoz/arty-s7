@@ -30,13 +30,13 @@ The Arty S7 development board is a great starting point. It comes with a lot of 
 
 ## VexRiscv
 
-### Toolchain and C++ compile
-
-Doing a bare metal implementation from scratch was a worthy challenge. There was a lot to re-learn about linking sections, instruction memory and data memory layout. I can tell that I level up my embedded microprocessor knowledge and the time spent was a good investment.
+Working with RISC-V, a different soft-processor core like [Xilinx MicroBlaze](https://www.xilinx.com/products/design-tools/microblaze.html) was interesting and challenging. It was a long slow slope learning curve, but worth the time spent. There were a lot of concepts I have forgotten over time, principally as these days, most works on microcontrollers or microprocessors are done with the aid of IDE that already provided required bare metal startup code, register space and "complete" C/C++ `std` support functions.
 
 ### HDL
 
-Using the VexRiscv instead of other soft cores alternatives, although a harder path, gave me the opportunity to get a better understanding of the [RISC-V ISA (Instruction Set Architecture)](https://en.wikipedia.org/wiki/RISC-V). Also, the need to implement some basic RTL blocks was a good task to refresh some gone knowledge.
+Using the VexRiscv instead of other soft cores alternatives, gave me the opportunity to get a better understanding of the [RISC-V ISA (Instruction Set Architecture)](https://en.wikipedia.org/wiki/RISC-V). Also, the need to implement some basic RTL blocks was a good task to refresh some gone knowledge in Verilog and HDL.
+
+One interesting challenge what the use of two different but similar languages for design. The Verilog syntax was based on C. Therefore, sometimes while coding RTL some C/C++ constructs were mixed or vice-versa.
 
 ## Future work
 
@@ -53,15 +53,17 @@ This is an ongoing project, and there are several features coming later. Among t
     - add FPU (floating point unit)
     - Connect to WiFi (ESP32)
     - Implement INT (interrupts) handling to remove polling
+    - Multi-core with FreeRTOS VexRiscv implementation could be in the planning.
   - UART: add TX/RX FIFOs + improve handshaking (e.g. remove TX bit set)
   - Hardware
     - Add battery sensors
     - Check other DC motor drivers' options
+    - Improve DC motors control with a [PID](https://en.wikipedia.org/wiki/PID_controller) - HW/RTL vs FW/C++ implementation
 - Tools
-  - Better integration of verification tools: currently the verification process is a two-step, involving compiling the firmware (FW) and then running the simulation. Both should be integrated into a single `Makefile `that check for FW changes and compile as required.
+  - Better integration of verification tools: currently the verification process is a two-step, involving compiling the firmware (FW) and then running the simulation / or generating the bitstream. Both should be integrated into a single `Makefile `that check for FW changes and compile as required/generates a new bitstream as required.
   - Check the Vivado IP Integrator flow: I decided not to follow the usual IP integrator flow as I wanted to keep things as simple as possible given the allocated time for this project and the short deadline (~8 weeks when you only have nights and a couple of hours on weekends is not that much)
 
-Finally, a multi-core with FreeRTOS VexRiscv implementation could be in the planning.
+> 👉 As a side note, I recently got a [Spartan Edge Accelerator Board](https://wiki.seeedstudio.com/Spartan-Edge-Accelerator-Board/) [<img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" style="height:1em;" />](https://github.com/SeeedDocument/Spartan-Edge-Accelerator-Board) which has a Spartan-7 XC7S15. The XC7S15 has fewer resources than the Arty S7, but it comes with an ESP32 (WiFi/Bluetooth) and is also Arduino compatible (at 5Vdc)- so the plan is to port the current HDL implementation and see how it goes in terms of resources.
 
 ## Final Remarks
 
