@@ -84,7 +84,7 @@ module hc_sr04_distance_sensor
     if(reset) begin
       edge_d      <= 1'b0;
       edge_cnt    <= '0;
-      o_valid <= 1'b0;
+      o_valid     <= 1'b0;
       edge_ticks  <= '0;
       
     end else begin

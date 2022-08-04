@@ -331,8 +331,8 @@ module arty_s7_atrover #(
       end
       
       // Distance sensor
-      if(frnt_valid == 1'b1) begin
-        io_regs[DST_SENSOR_RD_REG] <= {1'b1, frnt_edge_ticks};
+      if(frnt_avrg_vld == 1'b1) begin
+        io_regs[DST_SENSOR_RD_REG] <= {1'b1, frnt_edge_ticks_avrg};
       end
       
       // IO FW access
@@ -459,6 +459,40 @@ module arty_s7_atrover #(
     .o_valid(frnt_valid),
     .edge_ticks(frnt_edge_ticks)
   );
+  
+  logic frnt_avrg_vld;
+  logic[RISCV_WL-1:0] frnt_edge_ticks_avrg;
+  boxcar #(
+    .IW(RISCV_WL),
+    .LGMEM(8),
+    .FIXED_NAVG(1),
+    .INITIAL_NAVG(1)
+  )
+  distance_sensor_mv_avrg_fltr_inst
+  (
+    .i_clk(clk),
+    .i_reset(sys_reset),
+    .i_navg(8),
+    .i_ce(frnt_valid),
+    .i_sample(frnt_edge_ticks),
+    .o_result(frnt_edge_ticks_avrg)
+  );
+  
+  logic [3:0] frnt_avrg_vld_cnt;
+  always_ff @( posedge clk ) begin: frnt_avrg_vld_proc
+    if(sys_reset) begin
+      frnt_avrg_vld_cnt <= '0;
+      
+    end else begin
+      if(frnt_valid) begin
+        if(frnt_avrg_vld_cnt < 8 ) begin
+          frnt_avrg_vld_cnt <= frnt_avrg_vld_cnt + 1;
+        end
+      end
+    end
+  end
+  
+  assign frnt_avrg_vld = (frnt_avrg_vld_cnt == 8 && frnt_valid);
   
   // ----------------------------------------
   always_comb dBus_rsp_data = (io_slct_d) ? (io_rdata) : (mem_rdata);
