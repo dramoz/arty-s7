@@ -286,7 +286,7 @@ module arty_s7_atrover #(
     M0_BWD_PWM_REG      = 11,
     M1_FWD_PWM_REG      = 12,
     M1_BWD_PWM_REG      = 13,
-    DST_SENSOR_RD_REG        = 14
+    DST_SENSOR_RD_REG   = 14
   } io_registers;
   
   logic                io_wen;

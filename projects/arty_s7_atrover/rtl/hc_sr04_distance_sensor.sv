@@ -53,7 +53,7 @@ module hc_sr04_distance_sensor
   output logic [O_WL-1:0] edge_ticks
 );
   localparam SOUND_SPEED_M_S = 340;
-  localparam real MAX_TIME = ((2*MAX_DISTANCE_M)/SOUND_SPEED_M_S);
+  localparam real MAX_TIME = ((2.0*MAX_DISTANCE_M)/SOUND_SPEED_M_S);
   localparam EDGE_CNT_WL = $clog2(int'(real'(CLK_FREQ)*MAX_TIME));
   
   localparam PING_CNT    = int'(CLK_FREQ/PING_FREQ);
@@ -91,8 +91,8 @@ module hc_sr04_distance_sensor
       edge_d <= sn_edge;
       
       if(edge_d && !sn_edge) begin
-        edge_cnt     <= '0;
-        o_valid <= 1;
+        edge_cnt <= '0;
+        o_valid  <= 1;
         
         edge_ticks           <= '0;
         edge_ticks[O_WL-1:0] <= edge_cnt;
