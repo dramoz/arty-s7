@@ -79,7 +79,7 @@ cd projects/arty_s7_atrover/vexriscv_generator/VexRiscvBase/
 
 ---
 
-➜ The `vexriscv_generator` submodule has the required setup to build up the FW and generate the custom VexRiscv for this project. The VexRiscv architecture used in this project is the `VexRiscvBase`. The `VexRiscv` is a submodule pointing the the VexRiscv GitHub project.
+➜ The `vexriscv_generator` submodule has the required setup to build up the FW and generate the custom VexRiscv for this project. The VexRiscv architecture used in this project is the `VexRiscvBase`. The `VexRiscv` is a submodule pointing to the VexRiscv GitHub project.
 
 ---
 
@@ -398,20 +398,42 @@ IO peripherals are handled by an `IO Registers bank`.
 From the FW, the IO registers are accessed with:
 
 ```c++
-// ----------------------------------------------------
-// Registers declarations are handled in the file include/memory_map.h
-// ----------------------------------------------------
-// Example register declaration
-uint32_t constexpr GPIO_BASE_ADDR = 0x80000000u;
-uint32_t* const DEBUG_REG         = (uint32_t*)(0 * 0x04 + GPIO_BASE_ADDR);
+// ----------------------------------------------------------------------
+// --- __MEMORY_MAP__ ---
+#ifndef __MEMORY_MAP__
+#define __MEMORY_MAP__
 
-// Macros declaration
+#include<cstdint>
+
+// ----------------------------------------------------------------------
+uint32_t constexpr GPIO_BASE_ADDR = 0x80000000u;
+
+#define SET_IO_REG(REG_INX, REG_NAME) volatile uint32_t* const REG_NAME = (uint32_t*)(REG_INX * 0x04 + GPIO_BASE_ADDR)
 #define READ_IO(REG_ID) (*REG_ID)
 #define WRITE_IO(REG_ID, VL) (*REG_ID) = VL
 
-// RD/WR access
-WRITE_IO(DEBUG_REG, u32_var);
-uint32_t var = READ_IO(DEBUG_REG);
+// Registers
+SET_IO_REG( 0, DEBUG_REG      );
+SET_IO_REG( 1, UART0_TX_REG   );
+SET_IO_REG( 2, UART0_RX_REG   );
+SET_IO_REG( 3, LEDS_REG       );
+SET_IO_REG( 4, RGB0_REG       );
+SET_IO_REG( 5, RGB0_DCYCLE_REG);
+SET_IO_REG( 6, RGB1_REG       );
+SET_IO_REG( 7, RGB1_DCYCLE_REG);
+SET_IO_REG( 8, BUTTONS_REG    );
+SET_IO_REG( 9, SWITCHES_REG   );
+SET_IO_REG(10, M0_BWD_PWM_REG );
+SET_IO_REG(11, M0_FWD_PWM_REG );
+SET_IO_REG(12, M1_BWD_PWM_REG );
+SET_IO_REG(13, M1_FWD_PWM_REG );
+SET_IO_REG(14, DST_SENSOR_RD_REG );
+
+// ----------------------------------------------------------------------
+// --- __MEMORY_MAP__ ---
+#endif
+// ----------------------------------------------------------------------
+
 ```
 
 > 📝 IO peripherals can be added/removed as required, that's the beauty of FPGAs and soft processors.
@@ -462,16 +484,15 @@ Running a simulation includes three steps:
 
 - Generating the firmware HEX files
 - Running CoCoTB
-- Opening the generated wave with GTK
+- Opening the generated wave with GTKwave.
 
 ### Speeding up the simulation
 
-
-
-- Firmware: 
-- RTL:
+As the HDL has several PWMs and a UART which run at lower frequencies (e.g. 20KHz), the simulation time required to run a test becomes prohibited. One trick is to define in the top level of the RTL a set of local parameters that can be selected between a simulation or an implementation. With this aid, PWM and UART frequencies are set to higher values and the required simulation time is acceptable.
 
 > 👉[<img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Gtkwave_256x256x32.png" alt="File:Gtkwave 256x256x32.png" style="height:2em;" />](assets/waves/arty_s7_base.fst)
+
+A demo of a simulation run can be watched at https://youtu.be/X0y6GTZJoYI.
 
 ## Implementation
 
@@ -479,11 +500,11 @@ Running a simulation includes three steps:
 
 The full implementation of the base architecture used:
 
-| Block           | LUTs (32600) | Registers (65200) | Block RAM (75) | DSPs (120) |
-| --------------- | ------------ | ----------------- | -------------- | ---------- |
-| arty_s7_atrover | 1824 (5.60%) | 1749 (2.68%)      | 9 (12.00%)     | 4 (3.33%)  |
-| VexRiscv-RAM    | -            | -                 | 8 (10.67%)     | -          |
-| VexRiscv        | 1720 (5.28%) | 1056 (1.62%)      | 1 (1.33%)      | 4 (3.33%)  |
+| Block                 | LUTs (32600) | Registers (65200) | Block RAM (75) | DSPs (120) |
+| --------------------- | ------------ | ----------------- | -------------- | ---------- |
+| arty_s7_atrover (top) | 1922 (5.90%) | 1916 (2.94%)      | 9 (12.00%)     | 4 (3.33%)  |
+| VexRiscv-RAM          | -            | -                 | 8 (10.67%)     | -          |
+| VexRiscv              | 1708 (5.24%) | 1056 (1.62%)      | 1 (1.33%)      | 4 (3.33%)  |
 
 A full utilization report can be found in [Base Architecture Utilization Report](assets/base_arch_utilization.txt)
 
@@ -496,3 +517,17 @@ A full utilization report can be found in [Base Architecture Utilization Report]
 <p align = "center">
 <i>Base Architecture Implementation Reports & Floorplan (Vivado)</i>
 </p>
+## Downloading and testing the implementation
+
+Of all the project sections, this was probably the easiest and straight forward action. Plug-and-play - just connect the Arty-S7 to the USB port, open the Vivado Hardware manager and program the device.
+
+A demo of the working architecture can be watched at https://youtu.be/q7H8h2wQ4O4.
+
+## Final Remarks
+
+Although simple, the described base project demanded a lot of work on different fronts. The Xilinx Vivado tools were pretty much straightforward, with only minor inconveniences with constraints files and IO ports declaration, but just to be clear I came with previous experience with this tool and FPGAs.
+
+On the RISC-V, the learning curve was harder. Doing a bare metal implementation required a lot of learning on two different fronts.
+
+- Compiling required some adjustments to a new architecture, but in general, it was just C/C++
+- Linking was more of a challenge. Some previous experience with microcontrollers helped, but nowadays with new frameworks like Arduino, Raspberry or Xilinx Zynq Ultrascale - all this complexity tends to be hidden from the final user. However, it was a really neat learning experience.

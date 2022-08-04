@@ -4,7 +4,7 @@
 
 ### Disclaimer
 
-> ==**Build a project** with the Arty S7==, [7 Ways to Leave Your Spartan-6 FPGA](https://community.element14.com/technologies/fpga-group/w/documents/27537/7-ways-to-leave-your-spartan-6-fpga) [<img src="https://community.element14.com/e14/cfs/e14core/images/logos/e14_Profile_206px.png" alt="element14 Community" style="height:2em;" />](https://community.element14.com/) challenge.
+> ==**An experiment** with the Arty S7==, [7 Ways to Leave Your Spartan-6 FPGA](https://community.element14.com/technologies/fpga-group/w/documents/27537/7-ways-to-leave-your-spartan-6-fpga) [<img src="https://community.element14.com/e14/cfs/e14core/images/logos/e14_Profile_206px.png" alt="element14 Community" style="height:2em;" />](https://community.element14.com/) challenge.
 
 The Arty-S7-Rover is a small functional autonomous vehicle based on the [Digilent Arty S7-50 board](https://digilent.com/reference/programmable-logic/arty-s7/start). The project was done for the [7 Ways to Leave Your Spartan-6 FPGA](https://community.element14.com/technologies/fpga-group/w/documents/27537/7-ways-to-leave-your-spartan-6-fpga) [<img src="https://community.element14.com/e14/cfs/e14core/images/logos/e14_Profile_206px.png" alt="element14 Community" style="height:2em;" />](https://community.element14.com/) challenge.
 
@@ -56,7 +56,7 @@ int main(void) {
  160:	fedff06f          	j	14c <main>
 ```
 
-Another try:
+#### Another try
 
 ```c++
 #include "memory_map.h"
@@ -79,11 +79,12 @@ int main(void) {
 ```
 
 <p align = "center">
-  <img src="assets/led_experiment_2.png" alt="Arty-S7 VexRiscv LED toggle (2)" style="zoom:100%;" title="Arty-S7 VexRiscv LED toggle (1)" />
+  <img src="assets/led_experiment_2.png" alt="Arty-S7 VexRiscv LED toggle (2)" style="zoom:100%;" title="Arty-S7 VexRiscv LED toggle (2)" />
 </p>
 <p align = "center">
 <i>Arty-S7 VexRiscv LED toggle (2)</i>
 </p>
+
 
 Note that this case is misleading, as by checking the assembly file you can notice that the compiler did a good job and the target address is only loaded once.
 
@@ -124,7 +125,7 @@ int main(void) {
  19c:	fb1ff06f          	j	14c <main>
 ```
 
-A final attempt produced the expected behaviour.
+#### A final attempt produced the expected behaviour.
 
 ```c++
 #include "memory_map.h"
@@ -146,11 +147,12 @@ int main(void) {
 ```
 
 <p align = "center">
-  <img src="assets/led_experiment_2.png" alt="Arty-S7 VexRiscv LED toggle (2)" style="zoom:100%;" title="Arty-S7 VexRiscv LED toggle (1)" />
+  <img src="assets/led_experiment_3.png" alt="Arty-S7 VexRiscv LED toggle (3)" style="zoom:100%;" title="Arty-S7 VexRiscv LED toggle (3)" />
 </p>
 <p align = "center">
-<i>Arty-S7 VexRiscv LED toggle (2)</i>
+<i>Arty-S7 VexRiscv LED toggle (3)</i>
 </p>
+
 
 
 
@@ -160,8 +162,175 @@ int main(void) {
 
 ### The right PWM frequency
 
-Finding the right Geared Motor DC PMW frequency and duty cycle
+Finding the right Geared Motor DC PMW frequency and duty cycle was challenging. The geared dc motor added an extra complexity as the required starting torque was high. To speed up the test, firmware that used the dip switch and buttons to switch between different speeds and RTL with different PWM frequencies was created. After some trial and error, the best frequency found was 500Hz, with a duty cycle range between 30% and 100%. For the final version of the project, the max duty cycle was set to 80% as the difference in speed was not required.
 
+```c++
+///////////////////////////////////////////////////////////////////////////////
+// File: main.cpp
+// Copyright (c) 2022. Danilo Ramos
+// All rights reserved.
+// This license message must appear in all versions of this code including
+// modified versions.
+////////////////////////////////////////////////////////////////////////////////
+// Overview
+// Arty-S7-ROVER FW
+////////////////////////////////////////////////////////////////////////////////
 
+#include<cstdint>
+#include "memory_map.h"
 
-### Reading multiple sensors
+const uint32_t CLK_FREQ     = 100000000;
+const uint32_t RGB_PWM_FREQ =     20000;
+const uint32_t RGB_DCYLE  = uint32_t(0.01 * CLK_FREQ/RGB_PWM_FREQ);
+
+const uint32_t MOTOR_PWM_FREQ   = 500;
+const uint32_t MOTOR_FULL_STOP  = 0;
+const uint32_t MOTOR_SLOW_SPEED = uint32_t(0.1 * CLK_FREQ/MOTOR_PWM_FREQ);
+const uint32_t MOTOR_HIGH_SPEED = uint32_t(0.5 * CLK_FREQ/MOTOR_PWM_FREQ);
+const uint32_t MOTOR_SPEED_STEP = uint32_t(0.4/16 * CLK_FREQ/MOTOR_PWM_FREQ);
+
+const uint32_t UART_MASK    = 0x80000000;
+
+int main(void) {
+  // LEDs
+  uint32_t leds_st = 1;
+  uint32_t rgb0 = 1;
+  uint32_t rgb1 = 1;
+  
+  // IOs
+  uint32_t btn = 0;
+  uint32_t sw  = 0;
+  
+  // Setup Motors PWMs
+  uint32_t dir_rpt = (uint32_t)('s');  // s:stop, f:forward, b:backward, l:left, r:right
+  uint32_t motor_curr_speed = MOTOR_FULL_STOP;
+  WRITE_IO(M0_BWD_PWM_REG, MOTOR_FULL_STOP);
+  WRITE_IO(M0_FWD_PWM_REG, MOTOR_FULL_STOP);
+  WRITE_IO(M1_BWD_PWM_REG, MOTOR_FULL_STOP);
+  WRITE_IO(M1_FWD_PWM_REG, MOTOR_FULL_STOP);
+  
+  // Setup RGBs to low intensity
+  WRITE_IO(RGB0_DCYCLE_REG, RGB_DCYLE);
+  WRITE_IO(RGB1_DCYCLE_REG, RGB_DCYLE);
+  
+  // Turn on LEDs 1 to ACK PWR and RISCV boot OK.
+  WRITE_IO(LEDS_REG, leds_st);
+  
+  // UART Hello World
+  const char* hello_msg = "Arty-S7 ROVER (VexRiscv)\r\n";
+  uint32_t inx = 0;
+  
+  bool pending_tx;
+  uint32_t uart_rx;
+  uint32_t uart_tx;
+  
+  while(hello_msg[inx]!=0) {
+    uart_tx = READ_IO(UART0_TX_REG);
+    if((uart_tx & UART_MASK)==0) {
+      WRITE_IO(UART0_TX_REG, (uint32_t)hello_msg[inx] | UART_MASK);
+      ++inx;
+    }
+  };
+  
+  // Loop forever
+  pending_tx = false;
+  uart_rx = 0;
+  for(;;) {
+    btn = READ_IO(BUTTONS_REG);
+    sw  = READ_IO(SWITCHES_REG);
+    
+    // DC motors
+    // Select speed from SW
+    if(sw==0) {
+      motor_curr_speed = MOTOR_FULL_STOP;
+    }
+    else if(sw==0xff) {
+      motor_curr_speed = MOTOR_HIGH_SPEED;
+    }
+    else {
+      motor_curr_speed = MOTOR_SPEED_STEP * sw + MOTOR_SLOW_SPEED;
+    }
+    
+    // Select direction from button
+    // Prioritize as only one setting is possible
+    leds_st = btn;
+    if(btn & 0x1) {
+      // Move FWD
+      dir_rpt = (uint32_t)('f');
+      WRITE_IO(M0_BWD_PWM_REG, MOTOR_FULL_STOP);
+      WRITE_IO(M0_FWD_PWM_REG, motor_curr_speed);
+      WRITE_IO(M1_BWD_PWM_REG, MOTOR_FULL_STOP);
+      WRITE_IO(M1_FWD_PWM_REG, motor_curr_speed);
+    }
+    else if(btn & 0x2) {
+      // Move BKD
+      dir_rpt = (uint32_t)('b');
+      WRITE_IO(M0_BWD_PWM_REG, motor_curr_speed);
+      WRITE_IO(M0_FWD_PWM_REG, MOTOR_FULL_STOP);
+      WRITE_IO(M1_BWD_PWM_REG, motor_curr_speed);
+      WRITE_IO(M1_FWD_PWM_REG, MOTOR_FULL_STOP);
+    }
+    else if(btn & 0x4) {
+      // Move Right
+      dir_rpt = (uint32_t)('r');
+      WRITE_IO(M0_BWD_PWM_REG, MOTOR_FULL_STOP);
+      WRITE_IO(M0_FWD_PWM_REG, motor_curr_speed);
+      WRITE_IO(M1_BWD_PWM_REG, motor_curr_speed);
+      WRITE_IO(M1_FWD_PWM_REG, MOTOR_FULL_STOP);
+    }
+    else if(btn & 0x8) {
+      // Move Left
+      dir_rpt = (uint32_t)('l');
+      WRITE_IO(M0_BWD_PWM_REG, motor_curr_speed);
+      WRITE_IO(M0_FWD_PWM_REG, MOTOR_FULL_STOP);
+      WRITE_IO(M1_BWD_PWM_REG, MOTOR_FULL_STOP);
+      WRITE_IO(M1_FWD_PWM_REG, motor_curr_speed);
+    }
+    else {
+      // Stop
+      dir_rpt = 0;
+      WRITE_IO(M0_BWD_PWM_REG, MOTOR_FULL_STOP);
+      WRITE_IO(M0_FWD_PWM_REG, MOTOR_FULL_STOP);
+      WRITE_IO(M1_BWD_PWM_REG, MOTOR_FULL_STOP);
+      WRITE_IO(M1_FWD_PWM_REG, MOTOR_FULL_STOP);
+    }
+    
+    // Update LEDs
+    WRITE_IO(LEDS_REG, leds_st);
+    WRITE_IO(RGB0_REG, rgb0);
+    WRITE_IO(RGB1_REG, rgb1);
+    
+    // UART
+    if(!pending_tx) {
+      uart_rx = READ_IO(UART0_RX_REG);
+    }
+    
+    // Echo
+    if(uart_rx & UART_MASK) {
+      uart_tx = READ_IO(UART0_TX_REG);
+      if((uart_tx & UART_MASK)==0) {
+        WRITE_IO(UART0_TX_REG, uart_rx);
+        pending_tx = false;
+        uart_rx = 0;
+      }
+      else {
+        pending_tx = true;
+      }
+    }
+    else {
+      // Report
+      if(!pending_tx) {
+        if(dir_rpt) {
+          WRITE_IO(UART0_TX_REG, dir_rpt | UART_MASK);
+          dir_rpt = 0;
+        }
+      }
+    }
+  };
+  
+  return 0;
+}
+```
+
+[LINK youtube to DEMO]
+
