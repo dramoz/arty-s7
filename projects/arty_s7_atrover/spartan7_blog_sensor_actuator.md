@@ -14,7 +14,7 @@ All the files are open-source, MIT license and can be downloaded from [<img src=
 
 In this second part, a range ultrasound sensor and a 2xDC motor driver would be implemented.
 
-If you have note read it yet, please check the first blog [🚎 Arty-S7-Rover (base architecture)](spartan7_blog_project.md) as this section rely on that.
+If you have not read it yet, please check the first blog [🚎 Arty-S7-Rover (base architecture)](spartan7_blog_project.md) as this section rely on that.
 
 ## The Hardware
 
@@ -441,7 +441,9 @@ The distance in `cm` is calculated as $34000t$ (as measured by the HDL, or $N_{c
 
 ### Lab Test
 
-A small FW was done to test the distance sensor against the rover's speed. [Arty-S7-Rover Distance Sensor Lab Test Demo-Video](https://youtu.be/LdeiwEiGDuM)
+A small FW was done to test the distance sensor against the rover's speed. [Arty-S7-Rover Distance Sensor Lab Test Demo-Video](https://youtu.be/LdeiwEiGDuM).
+
+> 👉 A snippet of the code is presented below, the full FW can be downloaded from the repository.
 
 ```c++
 #include<cstdint>
@@ -470,106 +472,8 @@ const uint32_t DISTANCE_SLOW   = D2CNT(50);
 const uint32_t DISTANCE_MEDIUM = D2CNT(100);
 
 // -------------------------------------------------------------------
-const uint32_t MAX_MSG_LEN = 80;
-void reverse_string(char str[], int length)
-{
-    int start = 0;
-    int end = length;
-    while (start < end)
-    {
-        auto swap = *(str+start);
-        *(str+start) = *(str+end);
-        *(str+end) = swap;
-        start++;
-        end--;
-    }
-}
-
-uint32_t uitoa(int num, char* str)
-{
-    uint32_t i = 0;
- 
-    if (num == 0)
-    {
-        str[i++] = '0';
-    }
-    else {
-      // Process individual digits
-      while (num != 0)
-      {
-          int rem = num % 10;
-          str[i++] = rem + '0';
-          num = num/10;
-      }
-      
-      // Reverse the string
-      reverse_string(str, i);
-    }
-    
-    str[i++] = '\r';
-    str[i++] = '\n';
-    str[i] = '\0';
- 
-    return i;
-}
-void send_msg(const char* msg) {
-  uint32_t uart_tx;
-  
-  for(uint32_t inx=0; msg[inx] !=0; ++inx) {
-    do {
-      uart_tx = READ_IO(UART0_TX_REG);
-    } while( (uart_tx & MSB_MASK) != 0);
-    
-    WRITE_IO(UART0_TX_REG, (uint32_t)msg[inx] | MSB_MASK);
-  }
-}
-
-// -------------------------------------------------------------------
 int main(void) {
-  // LEDs
-  uint32_t leds_st = 1;
-  uint32_t rgb0 = 0x02;
-  uint32_t rgb1 = 0x02;
-  
-  // IOs
-  uint32_t btn = 0;
-  uint32_t sw  = 0;
-  uint32_t frnt_distance_rd;
-  
-  // Setup Motors PWMs
-  uint32_t motor_curr_speed = MOTOR_FULL_STOP;
-  WRITE_IO(M0_BWD_PWM_REG, MOTOR_FULL_STOP);
-  WRITE_IO(M0_FWD_PWM_REG, MOTOR_FULL_STOP);
-  WRITE_IO(M1_BWD_PWM_REG, MOTOR_FULL_STOP);
-  WRITE_IO(M1_FWD_PWM_REG, MOTOR_FULL_STOP);
-  
-  // Setup RGBs to low intensity
-  WRITE_IO(RGB0_DCYCLE_REG, RGB_DCYLE);
-  WRITE_IO(RGB1_DCYCLE_REG, RGB_DCYLE);
-  
-  // Turn on LEDs 1 to ACK PWR and RISCV boot OK.
-  WRITE_IO(LEDS_REG, leds_st);
-  
-  // UART Hello World
-  bool uart_tx_busy;
-  uint32_t uart_rx;
-  uint32_t uart_tx;
-  
-  const char* hello_msg = "Arty-S7 ROVER (VexRiscv)\r\n";
-  const char* press_btn = "\r\nPress ANY button to start test\r\n";
-  
-  send_msg(hello_msg);
-  
-  // Loop forever
-  const uint32_t do_rpt_ticks = 10000;
-  uint32_t rpt_cnt;
-  uint32_t msg_rpt_inx;
-  uint32_t msg_len;
-  char msg_rpt[MAX_MSG_LEN];
-  
-  uart_tx_busy = false;
-  uart_rx = 0;
-  frnt_distance_rd = 0;
+  ...
   for(;;) {
     // Wait for user button to start test
     send_msg(press_btn);
@@ -619,44 +523,11 @@ int main(void) {
       WRITE_IO(M1_FWD_PWM_REG, motor_curr_speed);
       
       // Update LEDs
-      WRITE_IO(LEDS_REG, leds_st);
-      WRITE_IO(RGB0_REG, rgb0);
-      WRITE_IO(RGB1_REG, rgb1);
+      ...
       
       // UART
-      uart_tx = READ_IO(UART0_TX_REG);
-      uart_tx_busy = ((uart_tx & MSB_MASK)!=0);
-      if(!uart_tx_busy) {
-        uart_rx = READ_IO(UART0_RX_REG);
-        if(uart_rx & MSB_MASK) {
-          WRITE_IO(UART0_TX_REG, uart_rx);
-        }
-        else {
-          ++rpt_cnt;
-          if(rpt_cnt == do_rpt_ticks) {
-            // Create messge
-            msg_rpt_inx = 0;
-            /*msg_rpt[msg_rpt_inx++] = 'd';
-            msg_rpt[msg_rpt_inx++] = ':';
-            msg_rpt[msg_rpt_inx++] = ' ';
-            msg_rpt_inx = uitoa(frnt_distance_rd, &msg_rpt[msg_rpt_inx]);
-            msg_rpt[msg_rpt_inx++] = '\r';
-            msg_rpt[msg_rpt_inx++] = '\n';
-            msg_rpt[msg_rpt_inx] = '\0';*/
-            msg_rpt_inx = uitoa(frnt_distance_rd, &msg_rpt[msg_rpt_inx]);
-            msg_rpt_inx = 0;
-          }
-          else if(rpt_cnt >= do_rpt_ticks) {
-            if(msg_rpt[msg_rpt_inx] != 0) {
-              WRITE_IO(UART0_TX_REG, (uint32_t)(msg_rpt[msg_rpt_inx]) | MSB_MASK);
-              ++msg_rpt_inx;
-            }
-            else {
-              rpt_cnt = 0;
-            }
-          }
-        } // check do rpt
-      } // if !uart_tx_busy
+      ...
+      
     } // end while moving
   } // forever
   
@@ -681,6 +552,104 @@ The implementation is called a [Moving Average Filter](https://zipcpu.com/dsp/20
 <p align = "center">
 <i>Moving Average Filter Block IO diagram</i>
 </p>
+In addition to the average filter, a step acceleration change was added to the FW to improve speed change and avoid abrupt changes. [Arty-S7-Rover Distance Sensor Lab Test 2 Demo-Video](https://youtu.be/vJ_GCQaoy-w).
+
+> 👉 A snippet of the code is presented below, the full FW can be downloaded from the repository.
+
+```c++
+...
+const uint32_t MOTOR_PWM_FREQ   = 500;
+const uint32_t MOTOR_FULL_STOP  = 0;
+const uint32_t MOTOR_SLOW_SPEED = (uint32_t)(0.3 * CLK_FREQ/MOTOR_PWM_FREQ);
+const uint32_t MOTOR_MEDIUM_SPEED = (uint32_t)(0.5 * CLK_FREQ/MOTOR_PWM_FREQ);
+const uint32_t MOTOR_HIGH_SPEED = (uint32_t)(0.8 * CLK_FREQ/MOTOR_PWM_FREQ);
+const uint32_t MOTOR_SPEED_STEP = (uint32_t)((1.0*MOTOR_HIGH_SPEED-MOTOR_SLOW_SPEED)/100);
+const uint32_t MOTOR_SPEED_CHNG_RATE = 20000;
+
+// Distance calc.
+...
+const uint32_t DISTANCE_STOP   = D2CNT(20);
+const uint32_t DISTANCE_SLOW   = D2CNT(60);
+const uint32_t DISTANCE_MEDIUM = D2CNT(100);
+
+// -------------------------------------------------------------------
+int main(void) {
+  ...
+  for(;;) {
+    // Wait for user button to start test
+    send_msg(press_btn);
+    do {
+      btn = READ_IO(BUTTONS_REG);
+      
+      // Simple code to check FW and HW programmed
+      sw  = READ_IO(SWITCHES_REG);
+      leds_st = sw;
+      
+    } while(btn==0x00);
+    
+    // Setup test
+    rpt_cnt = 0;
+    msg_rpt_inx = 0;
+    motor_curr_speed = MOTOR_SLOW_SPEED;
+    motor_rate_cnt   = MOTOR_SPEED_CHNG_RATE;
+    
+    while(motor_curr_speed!=MOTOR_FULL_STOP) {
+      // Simple code to check FW and HW programmed
+      sw  = READ_IO(SWITCHES_REG);
+      leds_st = sw;
+      
+      frnt_distance_rd = READ_IO(DST_SENSOR_RD_REG);
+      if(frnt_distance_rd & MSB_MASK) {
+        frnt_distance_rd &= ~MSB_MASK;
+        if(frnt_distance_rd <= DISTANCE_STOP) {
+          motor_curr_speed = MOTOR_FULL_STOP;
+          rgb0 = 0x01;
+          rgb1 = 0x01;
+        }
+        else if (frnt_distance_rd <= DISTANCE_SLOW) {
+          motor_curr_speed = MOTOR_SLOW_SPEED;
+          rgb0 = 0x02;
+          rgb1 = 0x02;
+        }
+        else if (frnt_distance_rd <= DISTANCE_MEDIUM) {
+          motor_curr_speed = MOTOR_MEDIUM_SPEED;
+          rgb0 = 0x04;
+          rgb1 = 0x04;
+        }
+        else {
+          if(motor_curr_speed < MOTOR_HIGH_SPEED) {
+            --motor_rate_cnt;
+            if(motor_rate_cnt==0) {
+              motor_curr_speed += MOTOR_SPEED_STEP;
+              motor_rate_cnt = MOTOR_SPEED_CHNG_RATE;
+            }
+            
+          } else {
+            motor_curr_speed = MOTOR_HIGH_SPEED;
+          }
+          rgb0 = 0x07;
+          rgb1 = 0x07;
+        }
+      } // if new distance read
+      
+      // Move FWD
+      ...
+      
+      // Update LEDs
+      ...
+      
+      // UART
+      ...
+      
+    } // end while moving
+  } // forever
+  
+  return 0;
+}
+
+```
+
+
 
 ## Final Remarks
 
