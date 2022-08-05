@@ -26,7 +26,7 @@
 <text text-anchor="middle" x="58.5624" y="-13.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">VexRiscvBase.v</text>
 </g>
 <!-- /home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/arty_s7_atrover.sv&#45;&gt;/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/VexRiscvBase.v -->
-<g id="edge7" class="edge">
+<g id="edge3" class="edge">
 <title>/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/arty_s7_atrover.sv&#45;&gt;/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/VexRiscvBase.v</title>
 <path fill="none" stroke="#000000" d="M349.8996,-79.2844C293.2283,-69.6917 208.9916,-54.6134 127.2746,-36.3134"/>
 <polygon fill="#000000" stroke="#000000" points="127.849,-32.855 117.3236,-34.0658 126.3068,-39.683 127.849,-32.855"/>
@@ -40,7 +40,7 @@
 <text text-anchor="middle" x="198.5624" y="-13.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">btn_debouncer.sv</text>
 </g>
 <!-- /home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/arty_s7_atrover.sv&#45;&gt;/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/btn_debouncer.sv -->
-<g id="edge5" class="edge">
+<g id="edge1" class="edge">
 <title>/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/arty_s7_atrover.sv&#45;&gt;/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/btn_debouncer.sv</title>
 <path fill="none" stroke="#000000" d="M361.0842,-71.9243C331.1611,-61.9959 293.8781,-49.6255 262.572,-39.2382"/>
 <polygon fill="#000000" stroke="#000000" points="263.6564,-35.9104 253.063,-36.0831 261.452,-42.5543 263.6564,-35.9104"/>
@@ -68,7 +68,7 @@
 <text text-anchor="middle" x="415.5624" y="-13.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">vexriscv_ram.v</text>
 </g>
 <!-- /home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/arty_s7_atrover.sv&#45;&gt;/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/vexriscv_ram.v -->
-<g id="edge1" class="edge">
+<g id="edge2" class="edge">
 <title>/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/arty_s7_atrover.sv&#45;&gt;/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/vexriscv_ram.v</title>
 <path fill="none" stroke="#000000" d="M415.5624,-71.8314C415.5624,-64.131 415.5624,-54.9743 415.5624,-46.4166"/>
 <polygon fill="#000000" stroke="#000000" points="419.0625,-46.4132 415.5624,-36.4133 412.0625,-46.4133 419.0625,-46.4132"/>
@@ -82,7 +82,7 @@
 <text text-anchor="middle" x="530.5624" y="-13.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">uart_lite.sv</text>
 </g>
 <!-- /home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/arty_s7_atrover.sv&#45;&gt;/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/uart_lite.sv -->
-<g id="edge3" class="edge">
+<g id="edge4" class="edge">
 <title>/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/arty_s7_atrover.sv&#45;&gt;/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/uart_lite.sv</title>
 <path fill="none" stroke="#000000" d="M444.5818,-71.8314C459.291,-62.6221 477.3268,-51.3301 493.0746,-41.4706"/>
 <polygon fill="#000000" stroke="#000000" points="494.9338,-44.436 501.5523,-36.1628 491.2191,-38.5029 494.9338,-44.436"/>
@@ -96,7 +96,7 @@
 <text text-anchor="middle" x="687.5624" y="-13.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">hc_sr04_distance_sensor.sv</text>
 </g>
 <!-- /home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/arty_s7_atrover.sv&#45;&gt;/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/hc_sr04_distance_sensor.sv -->
-<g id="edge2" class="edge">
+<g id="edge7" class="edge">
 <title>/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/arty_s7_atrover.sv&#45;&gt;/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/hc_sr04_distance_sensor.sv</title>
 <path fill="none" stroke="#000000" d="M481.406,-72.5708C520.0422,-62.3436 569.081,-49.3627 609.6365,-38.6274"/>
 <polygon fill="#000000" stroke="#000000" points="610.7132,-41.9631 619.4846,-36.0206 608.9219,-35.1961 610.7132,-41.9631"/>
@@ -110,7 +110,7 @@
 <text text-anchor="middle" x="836.5624" y="-13.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#000000">boxcar.v</text>
 </g>
 <!-- /home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/arty_s7_atrover.sv&#45;&gt;/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/boxcar.v -->
-<g id="edge4" class="edge">
+<g id="edge5" class="edge">
 <title>/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/arty_s7_atrover.sv&#45;&gt;/home/dramoz/dev/arty&#45;s7/projects/arty_s7_atrover/rtl/boxcar.v</title>
 <path fill="none" stroke="#000000" d="M481.135,-85.7157C555.1882,-79.7494 679.0978,-66.3593 792.2335,-36.0125"/>
 <polygon fill="#000000" stroke="#000000" points="793.374,-39.3292 802.0968,-33.3157 791.5278,-32.5771 793.374,-39.3292"/>

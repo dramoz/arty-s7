@@ -33,60 +33,60 @@
 | uart_tx               | output    |             |             |
 ## Signals
 
-| Name                     | Type                          | Description |
-| ------------------------ | ----------------------------- | ----------- |
-| do_reset                 | logic                         |             |
-| sys_reset                | logic                         |             |
-| boot_reset               | logic                         |             |
-| iBus_cmd_valid           | logic                         |             |
-| iBus_cmd_ready           | logic                         |             |
-| iBus_cmd_payload_pc      | logic [RISCV_WL-1:0]          |             |
-| iBus_rsp_valid           | logic                         |             |
-| iBus_rsp_payload_error   | logic                         |             |
-| iBus_rsp_payload_inst    | logic [RISCV_WL-1:0]          |             |
-| dBus_cmd_valid           | logic                         |             |
-| dBus_cmd_ready           | logic                         |             |
-| dBus_cmd_payload_wr      | logic                         |             |
-| dBus_cmd_payload_address | logic [RISCV_WL-1:0]          |             |
-| dBus_cmd_payload_data    | logic [RISCV_WL-1:0]          |             |
-| dBus_cmd_payload_size    | logic [RISCV_PLS_WL-1:0]      |             |
-| dBus_rsp_ready           | logic                         |             |
-| dBus_rsp_error           | logic                         |             |
-| dBus_rsp_data            | logic [RISCV_WL-1:0]          |             |
-| timerInterrupt           | logic                         |             |
-| externalInterrupt        | logic                         |             |
-| softwareInterrupt        | logic                         |             |
-| io_slct                  | logic                         |             |
-| io_slct_d                | logic                         |             |
-| ibus_addr                | logic [RISCV_RAM_ADDR_WL-1:0] |             |
-| byte_slct                | logic [RISCV_WL_BYTES-1:0]    |             |
-| dbus_we                  | logic [RISCV_WL_BYTES-1:0]    |             |
-| dbus_addr                | logic [RISCV_RAM_ADDR_WL-1:0] |             |
-| mem_rdata                | logic [RISCV_WL-1:0]          |             |
-| mem_wdata                | logic [RISCV_WL-1:0]          |             |
-| btn_dbncd                | logic [3:0]                   |             |
-| rgb0_dcycle              | logic [RISCV_WL-1:0]          |             |
-| rgb0_pwm                 | logic                         |             |
-| rgb1_dcycle              | logic [RISCV_WL-1:0]          |             |
-| rgb1_pwm                 | logic                         |             |
-| io_wen                   | logic                         |             |
-| io_addr                  | logic [IO_SPACE_ADDR_WL-1:0]  |             |
-| io_wdata                 | logic [RISCV_WL-1:0]          |             |
-| io_rdata                 | logic [RISCV_WL-1:0]          |             |
-| io_regs                  | logic [RISCV_WL-1:0]          |             |
-| uart0_tx_rdy             | logic                         |             |
-| uart0_tx_vld             | logic                         |             |
-| uart0_tx_data            | logic [7:0]                   |             |
-| uart0_tx_uart            | logic                         |             |
-| uart0_rx_valid           | logic                         |             |
-| uart0_rx_data            | logic [7:0]                   |             |
-| uart0_rx_uart            | logic                         |             |
-| dc_motors_pwm            | logic [3:0]                   |             |
-| frnt_valid               | logic                         |             |
-| frnt_edge_ticks          | logic [RISCV_WL-2:0]          |             |
-| frnt_avrg_vld            | logic                         |             |
-| frnt_edge_ticks_avrg     | logic[RISCV_WL-1:0]           |             |
-| frnt_avrg_vld_cnt        | logic [3:0]                   |             |
+| Name                     | Type                              | Description |
+| ------------------------ | --------------------------------- | ----------- |
+| do_reset                 | logic                             |             |
+| sys_reset                | logic                             |             |
+| boot_reset               | logic                             |             |
+| iBus_cmd_valid           | logic                             |             |
+| iBus_cmd_ready           | logic                             |             |
+| iBus_cmd_payload_pc      | logic [RISCV_WL-1:0]              |             |
+| iBus_rsp_valid           | logic                             |             |
+| iBus_rsp_payload_error   | logic                             |             |
+| iBus_rsp_payload_inst    | logic [RISCV_WL-1:0]              |             |
+| dBus_cmd_valid           | logic                             |             |
+| dBus_cmd_ready           | logic                             |             |
+| dBus_cmd_payload_wr      | logic                             |             |
+| dBus_cmd_payload_address | logic [RISCV_WL-1:0]              |             |
+| dBus_cmd_payload_data    | logic [RISCV_WL-1:0]              |             |
+| dBus_cmd_payload_size    | logic [RISCV_PLS_WL-1:0]          |             |
+| dBus_rsp_ready           | logic                             |             |
+| dBus_rsp_error           | logic                             |             |
+| dBus_rsp_data            | logic [RISCV_WL-1:0]              |             |
+| timerInterrupt           | logic                             |             |
+| externalInterrupt        | logic                             |             |
+| softwareInterrupt        | logic                             |             |
+| io_slct                  | logic                             |             |
+| io_slct_d                | logic                             |             |
+| ibus_addr                | logic [RISCV_RAM_ADDR_WL-1:0]     |             |
+| byte_slct                | logic [RISCV_WL_BYTES-1:0]        |             |
+| dbus_we                  | logic [RISCV_WL_BYTES-1:0]        |             |
+| dbus_addr                | logic [RISCV_RAM_ADDR_WL-1:0]     |             |
+| mem_rdata                | logic [RISCV_WL-1:0]              |             |
+| mem_wdata                | logic [RISCV_WL-1:0]              |             |
+| btn_dbncd                | logic [3:0]                       |             |
+| rgb0_dcycle              | logic [RISCV_WL-1:0]              |             |
+| rgb0_pwm                 | logic                             |             |
+| rgb1_dcycle              | logic [RISCV_WL-1:0]              |             |
+| rgb1_pwm                 | logic                             |             |
+| io_wen                   | logic                             |             |
+| io_addr                  | logic [IO_SPACE_ADDR_WL-1:0]      |             |
+| io_wdata                 | logic [RISCV_WL-1:0]              |             |
+| io_rdata                 | logic [RISCV_WL-1:0]              |             |
+| io_regs                  | logic [RISCV_WL-1:0]              |             |
+| uart0_tx_rdy             | logic                             |             |
+| uart0_tx_vld             | logic                             |             |
+| uart0_tx_data            | logic [7:0]                       |             |
+| uart0_tx_uart            | logic                             |             |
+| uart0_rx_valid           | logic                             |             |
+| uart0_rx_data            | logic [7:0]                       |             |
+| uart0_rx_uart            | logic                             |             |
+| dc_motors_pwm            | logic [3:0]                       |             |
+| frnt_valid               | logic                             |             |
+| frnt_edge_ticks          | logic [RISCV_WL-2:0]              |             |
+| frnt_avrg_vld            | logic                             |             |
+| frnt_edge_ticks_avrg     | logic[RISCV_WL-1:0]               |             |
+| frnt_avrg_vld_cnt        | logic [$clog2(DISTANCE_AVRG_N):0] |             |
 ## Constants
 
 | Name                             | Type | Value                           | Description |
@@ -101,6 +101,7 @@
 | DISTANCE_SENSOR_PING_FREQ        |      | 10000                           |             |
 | DISTANCE_SENSOR_TRIG_DURATION_US |      | 1                               |             |
 | DISTANCE_SENSOR_MAX_DISTANCE_M   |      | 4                               |             |
+| DISTANCE_AVRG_N                  |      | 4                               |             |
 | CLICK_DEBOUNCE_MS                |      | 10                              |             |
 | LONG_PRESS_DURATION_MS           |      | 1000                            |             |
 | RGB_PWM_FREQ                     |      | 20000                           |             |
@@ -109,6 +110,7 @@
 | DISTANCE_SENSOR_PING_FREQ        |      | 10                              |             |
 | DISTANCE_SENSOR_TRIG_DURATION_US |      | 10                              |             |
 | DISTANCE_SENSOR_MAX_DISTANCE_M   |      | 4                               |             |
+| DISTANCE_AVRG_N                  |      | 16                              |             |
 | RISCV_RAM_ADDR_WL                |      | $clog2(RISCV_RAM_DEPTH-1)       |             |
 | PWM_DCYCLE_WL                    |      | $clog2(CLK_FREQ/RGB_PWM_FREQ+1) |             |
 | IO_REG_SPACE                     |      | 16                              |             |
@@ -155,4 +157,5 @@
 - vexriscv_ram_inst: vexriscv_ram
 - uart0_inst: uart_lite
 - hc_sr04_distance_sensor_inst: hc_sr04_distance_sensor
+- distance_sensor_mv_avrg_fltr_inst: boxcar
 - VexRiscvBase_inst: VexRiscvBase

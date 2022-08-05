@@ -691,3 +691,4 @@ The versatility of the Spartan 7 was amazing:
   - Free processor time
   - Highly configurable
 - Easy to add extra blocks like Digital filters as required like a [Moving Average FIR](https://en.wikipedia.org/wiki/Finite_impulse_response).
+- ... and all of that without increasing the soft core processor load!
