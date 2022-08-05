@@ -38,6 +38,14 @@ Using the VexRiscv instead of other soft cores alternatives, gave me the opportu
 
 One interesting challenge what the use of two different but similar languages for design. The Verilog syntax was based on C. Therefore, sometimes while coding RTL some C/C++ constructs were mixed or vice-versa.
 
+> 📝 Although I have not compared yet my current implementation against a Microblaze soft core with Vivado IP integrator, I think the current implementation requires less logic and interconnections resources. Without taking into account the soft core processors, the extra logic and paths when using the AXI4 to connect peripherals would require extra resources that can be costly. Note, that I think that it should be possible to use a Microblaze without AXI4, but I have not gone there yet. Nevertheless, I think that with Vivado IP Integrator aid it would be faster to deploy an application - if no experience or resource reuse is available.
+
+## CoCoTB/Verilator
+
+When working with FPGAs, simulating first is key. Debugging time of untested RTL code directly on an FPGA is costly and a long task. Fortunately, there are free available tools to speed up the first debugging stages. Using the Vivado simulator is a good starting point, but for complex designs simulation time becomes prohibitive. Most of the errors I have were easy to debug with CoCoTB/Verilator by using Python to generate the testcases.
+
+> ⚠ Improving your testing skills while working with embedded systems (with or without FPGAs) is a key to successfully deploying projects.
+
 ## Future work
 
 This is an ongoing project, and there are several features coming later. Among them, the next ones are:

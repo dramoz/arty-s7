@@ -334,5 +334,7 @@ int main(void) {
 
 ### A variable frequency variable duty cycle PWM
 
+Given the issues with the PWM frequency and duty cycle, I decided to try a variable frequency / variable duty cycle PWM. When doing DC motor speed control with PWM. Usually, the PWM frequency is kept fixed while varying the duty cycle. A brushed DC motor's PWM frequency is characterized by the motor time constant which is set by the motor's internal impedance, and it can be modelled as an inductor with a resistor in series. Googling around you will find different recommendations, from ranges between 200Hz~500Hz or 5KHz~20KHz. As each motor model is different, a practical approach could be from trial and error to find a good frequency.
 
+After finding different possible PWM frequencies/duty cycle pairs, I experimented by implementing a variable frequency / variable duty cycle PWM IP block controlled by the RISC-V FW.
 

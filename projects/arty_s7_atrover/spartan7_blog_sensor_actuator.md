@@ -57,14 +57,14 @@ As with any H-Bridge, it can be controlled with two PMW per motor to move forwar
 | Forward    | PMW  |  0   |      |      |
 | Reverse    |  0   | PWM  |      |      |
 | Stop       |  0   |  0   |      |      |
-| Break      |  1   |  1   |      |      |
+| Brake      |  1   |  1   |      |      |
 
 | DC Motor 2 |  D0  |  D1  |  D2  |  D3  |
 | ---------- | :--: | :--: | :--: | :--: |
 | Forward    |      |      | PWM  |  0   |
 | Reverse    |      |      |  0   | PWM  |
 | Stop       |      |      |  0   |  0   |
-| Break      |      |      |  1   |  1   |
+| Brake      |      |      |  1   |  1   |
 
 <p align = "center">
   <img src="assets/dc_motor_driver.jpg" style="zoom:100%;" title="ZK-5AD DC Motor Driver" />
