@@ -97,7 +97,7 @@ module  boxcar #(
         // }}}
   );
   
-  localparam [0:0] OPT_SIGNED=1'b0; // T for averaging signed nbrs
+  localparam [0:0] OPT_SIGNED=1'b1; // T for averaging signed nbrs
   // Signal declarations
   // {{{
   reg      full;

@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Sun Jul 24 03:08:38 2022
+[*] Fri Aug  5 02:16:52 2022
 [*]
 [dumpfile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/dump.fst"
-[dumpfile_mtime] "Sun Jul 24 03:07:38 2022"
-[dumpfile_size] 12324
+[dumpfile_mtime] "Fri Aug  5 02:15:42 2022"
+[dumpfile_size] 13857392
 [savefile] "/home/dramoz/dev/arty-s7/projects/arty_s7_atrover/tb/arty_s7_atrover.gtkw"
 [timestart] 0
-[size] 2560 1370
+[size] 2560 1018
 [pos] -1 -1
-*-28.477425 603600000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-30.186171 4854000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] arty_s7_atrover.
 [sst_width] 379
-[signals_width] 258
+[signals_width] 412
 [sst_expanded] 1
-[sst_vpaned_height] 872
+[sst_vpaned_height] 289
 @28
 arty_s7_atrover.resetn
 arty_s7_atrover.clk
@@ -56,9 +56,6 @@ arty_s7_atrover.m0_fwd_pwm
 arty_s7_atrover.m1_bwd_pwm
 [color] 4
 arty_s7_atrover.m1_fwd_pwm
-arty_s7_atrover.fnt_dst_sens_trigger
-@25
-arty_s7_atrover.hc_sr04_distance_sensor_inst.distance_cm[8:0]
 @1000200
 -status
 @200
@@ -108,11 +105,6 @@ arty_s7_atrover.m1_fwd_pwm
 -motors_pwm
 @800200
 -distance_sensor
-@28
-arty_s7_atrover.fnt_dst_sens_edge
-arty_s7_atrover.fnt_dst_sens_trigger
-@24
-arty_s7_atrover.hc_sr04_distance_sensor_inst.distance_cm[8:0]
 @1000200
 -distance_sensor
 @1401200
@@ -365,9 +357,13 @@ arty_s7_atrover.dc_motors_pwm_gen[0].pwm_dc_motor.o_pwm
 -motors_pwm
 @200
 ---------------------
-@800200
+@c00200
 -distance_sensor
+@22
+arty_s7_atrover.hc_sr04_distance_sensor_inst.MAX_TIME
 @420
+arty_s7_atrover.hc_sr04_distance_sensor_inst.MAX_DISTANCE_M
+arty_s7_atrover.hc_sr04_distance_sensor_inst.SOUND_SPEED_M_S
 arty_s7_atrover.hc_sr04_distance_sensor_inst.PING_FREQ
 arty_s7_atrover.hc_sr04_distance_sensor_inst.TRIG_DURATION_US
 arty_s7_atrover.hc_sr04_distance_sensor_inst.PING_CNT
@@ -376,17 +372,46 @@ arty_s7_atrover.hc_sr04_distance_sensor_inst.EDGE_CNT_WL
 @28
 arty_s7_atrover.hc_sr04_distance_sensor_inst.reset
 arty_s7_atrover.hc_sr04_distance_sensor_inst.clk
-@24
-arty_s7_atrover.hc_sr04_distance_sensor_inst.distance_cm[8:0]
-@28
-arty_s7_atrover.hc_sr04_distance_sensor_inst.distance_vld
-@22
-arty_s7_atrover.hc_sr04_distance_sensor_inst.edge_cnt[31:0]
-@28
 arty_s7_atrover.hc_sr04_distance_sensor_inst.edge_d
-arty_s7_atrover.hc_sr04_distance_sensor_inst.sn_edge
 arty_s7_atrover.hc_sr04_distance_sensor_inst.sn_trigger
-@1000200
+arty_s7_atrover.hc_sr04_distance_sensor_inst.sn_edge
+@24
+arty_s7_atrover.hc_sr04_distance_sensor_inst.edge_ticks[30:0]
+@28
+arty_s7_atrover.hc_sr04_distance_sensor_inst.o_valid
+@1401200
 -distance_sensor
+@c00201
+-distance_sensor_avrg
+@28
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.i_ce
+@24
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.i_sample[30:0]
+@420
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.acc[33:0]
+@24
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.sub[31:0]
+@28
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.full
+@24
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.rdaddr[2:0]
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.preval[30:0]
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.memval[30:0]
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.wraddr[2:0]
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.mem[0][30:0]
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.mem[1][30:0]
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.mem[2][30:0]
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.mem[3][30:0]
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.mem[4][30:0]
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.mem[5][30:0]
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.mem[6][30:0]
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.mem[7][30:0]
+arty_s7_atrover.distance_sensor_mv_avrg_fltr_inst.o_result[33:0]
+@28
+arty_s7_atrover.frnt_avrg_vld
+@24
+arty_s7_atrover.frnt_edge_ticks_avrg[30:0]
+@1401201
+-distance_sensor_avrg
 [pattern_trace] 1
 [pattern_trace] 0

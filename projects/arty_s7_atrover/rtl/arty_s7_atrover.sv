@@ -66,6 +66,7 @@ module arty_s7_atrover #(
   localparam DISTANCE_SENSOR_PING_FREQ        = 10000;
   localparam DISTANCE_SENSOR_TRIG_DURATION_US = 1;
   localparam DISTANCE_SENSOR_MAX_DISTANCE_M  = 4;
+  localparam DISTANCE_AVRG_N = 3; 
   
 `else
   // Debouncers
@@ -81,6 +82,7 @@ module arty_s7_atrover #(
   localparam DISTANCE_SENSOR_PING_FREQ        = 10;
   localparam DISTANCE_SENSOR_TRIG_DURATION_US = 10;
   localparam DISTANCE_SENSOR_MAX_DISTANCE_M  = 4;
+  localparam DISTANCE_AVRG_N = 4;
   
 `endif
   
@@ -460,39 +462,45 @@ module arty_s7_atrover #(
     .edge_ticks(frnt_edge_ticks)
   );
   
+  localparam OW_MV_AVRG = RISCV_WL-1+DISTANCE_AVRG_N;
   logic frnt_avrg_vld;
-  logic[RISCV_WL-1:0] frnt_edge_ticks_avrg;
+  logic [OW_MV_AVRG-1:0] frnt_edge_ticks_avrg_fullw;
+  logic [RISCV_WL-2:0]   frnt_edge_ticks_avrg;
   boxcar #(
-    .IW(RISCV_WL),
-    .LGMEM(8),
-    .FIXED_NAVG(1),
-    .INITIAL_NAVG(1)
+    .IW(RISCV_WL-1),
+    .LGMEM(DISTANCE_AVRG_N),
+    .OW(OW_MV_AVRG),
+    .FIXED_NAVG(1)
   )
   distance_sensor_mv_avrg_fltr_inst
   (
     .i_clk(clk),
     .i_reset(sys_reset),
-    .i_navg(8),
+    .i_navg(1),
     .i_ce(frnt_valid),
     .i_sample(frnt_edge_ticks),
-    .o_result(frnt_edge_ticks_avrg)
+    .o_result(frnt_edge_ticks_avrg_fullw)
   );
+  always_comb frnt_edge_ticks_avrg = frnt_edge_ticks_avrg_fullw[DISTANCE_AVRG_N +: RISCV_WL-2];
   
-  logic [3:0] frnt_avrg_vld_cnt;
+  logic [DISTANCE_AVRG_N:0] frnt_avrg_vld_cnt;
   always_ff @( posedge clk ) begin: frnt_avrg_vld_proc
     if(sys_reset) begin
       frnt_avrg_vld_cnt <= '0;
       
     end else begin
       if(frnt_valid) begin
-        if(frnt_avrg_vld_cnt < 8 ) begin
+        if(frnt_avrg_vld_cnt < (1 << DISTANCE_AVRG_N) ) begin
           frnt_avrg_vld_cnt <= frnt_avrg_vld_cnt + 1;
+          frnt_avrg_vld <= 1'b0;
+          
+        end else begin
+          frnt_avrg_vld <= 1'b1;
+          
         end
       end
     end
   end
-  
-  assign frnt_avrg_vld = (frnt_avrg_vld_cnt == 8 && frnt_valid);
   
   // ----------------------------------------
   always_comb dBus_rsp_data = (io_slct_d) ? (io_rdata) : (mem_rdata);

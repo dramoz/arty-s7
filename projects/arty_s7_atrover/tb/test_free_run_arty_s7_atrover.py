@@ -53,7 +53,7 @@ async def fake_distance(dut):
     dut.frnt_dst_sens_edge.value = 0
     
 @cocotb.test()
-async def free_run_arty_s7_atrover(dut, times=300, duration=10, units='us'):
+async def free_run_arty_s7_atrover(dut, times=1000, duration=10, units='us'):
   """Just let it run a few microseconds"""
   
   clk_period = int(1e9/CLK_FREQ)
